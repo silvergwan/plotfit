@@ -10,11 +10,19 @@ export default function Home() {
   // 상태를 단순 변수로 이해하면 안됨, 상태는 React가 값의 변경을 알아채고 리렌더링까지 하는 아주 고차원적 개념
   const [plotContent, setPlotContent] = useState("");
 
-  const handleGenerate = () => {
-    console.log("버튼 눌림");
-    console.log(`baseProfile: ${baseProfile}`);
-    console.log(`plotContent: ${plotContent}`);
+  // -----------------------------
+  // POST/api/generate
+  // -----------------------------
+  const handleGenerate = async () => {
+    const res = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ baseProfile, plotContent }),
+    });
+    const data = await res.json();
+    console.log("API 응답:", data);
   };
+  // -----------------------------
 
   return (
     <main>
