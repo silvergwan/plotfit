@@ -30,26 +30,28 @@ export default function Home() {
   // -----------------------------
 
   return (
-    <main>
-      <h1>PlotFit</h1>
-      <p>플롯에 맞는 나만의 프로필을 만들어드립니다.</p>
+    <main className="min-h-screen bg-zinc-950 text-white p-8">
+      <div className="max-w-3xl mx-auto">
+        <h1>PlotFit</h1>
+        <p>플롯에 맞는 나만의 프로필을 만들어드립니다.</p>
 
-      <textarea
-        placeholder="기본 프로필을 입력하세요"
-        value={baseProfile}
-        onChange={(e) => setBaseProfile(e.target.value)}
-        // 키를 하나 누를 때마다 onChange가 실행되고 e.target.value로 그 시점의 데이터를 setBaseProfile(useState) 저장소에 넣음
-        // 그리고 setBaseProfile가 실행되면 React가 자동으로 화면을 다시 그림 -> React의 핵심! = 값이 바뀌면 알아서 렌더링
-      />
-      <textarea
-        placeholder="플롯 내용을 붙여넣으세요"
-        value={plotContent}
-        onChange={(e) => setPlotContent(e.target.value)}
-      />
+        <textarea
+          placeholder="기본 프로필을 입력하세요"
+          value={baseProfile}
+          onChange={(e) => setBaseProfile(e.target.value)}
+          // 키를 하나 누를 때마다 onChange가 실행되고 e.target.value로 그 시점의 데이터를 setBaseProfile(useState) 저장소에 넣음
+          // 그리고 setBaseProfile가 실행되면 React가 자동으로 화면을 다시 그림 -> React의 핵심! = 값이 바뀌면 알아서 렌더링
+        />
+        <textarea
+          placeholder="플롯 내용을 붙여넣으세요"
+          value={plotContent}
+          onChange={(e) => setPlotContent(e.target.value)}
+        />
 
-      <button onClick={handleGenerate}>프로필 생성하기</button>
+        <button onClick={handleGenerate}>프로필 생성하기</button>
 
-      <p>{result}</p>
+        <p>{result}</p>
+      </div>
     </main>
   );
 }
