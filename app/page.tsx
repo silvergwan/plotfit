@@ -10,6 +10,12 @@ export default function Home() {
   // 상태를 단순 변수로 이해하면 안됨, 상태는 React가 값의 변경을 알아채고 리렌더링까지 하는 아주 고차원적 개념
   const [plotContent, setPlotContent] = useState("");
 
+  const handleGenerate = () => {
+    console.log("버튼 눌림");
+    console.log(`baseProfile: ${baseProfile}`);
+    console.log(`plotContent: ${plotContent}`);
+  };
+
   return (
     <main>
       <h1>PlotFit</h1>
@@ -29,10 +35,7 @@ export default function Home() {
         // 같은 내용
       />
 
-      <button>프로필 생성하기</button>
-
-      <p>{baseProfile}</p>
-      <p>{plotContent}</p>
+      <button onClick={handleGenerate}>프로필 생성하기</button>
     </main>
   );
 }
