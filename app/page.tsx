@@ -10,6 +10,8 @@ export default function Home() {
   // 상태를 단순 변수로 이해하면 안됨, 상태는 React가 값의 변경을 알아채고 리렌더링까지 하는 아주 고차원적 개념
   const [plotContent, setPlotContent] = useState("");
 
+  const [result, setResult] = useState("");
+
   // -----------------------------
   // POST/api/generate
   // -----------------------------
@@ -20,7 +22,10 @@ export default function Home() {
       body: JSON.stringify({ baseProfile, plotContent }),
     });
     const data = await res.json();
-    console.log("API 응답:", data);
+    console.log("data 전체:", data);
+    console.log("data.result:", data.result);
+    setResult(data.result);
+    console.log("result 상태:", result);
   };
   // -----------------------------
 
@@ -40,10 +45,11 @@ export default function Home() {
         placeholder="플롯 내용을 붙여넣으세요"
         value={plotContent}
         onChange={(e) => setPlotContent(e.target.value)}
-        // 같은 내용
       />
 
       <button onClick={handleGenerate}>프로필 생성하기</button>
+
+      <p>{result}</p>
     </main>
   );
 }
