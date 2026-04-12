@@ -27,15 +27,20 @@ export default function Home() {
       return;
     }
     setError("");
-    setLoading(true);
-    const res = await fetch("/api/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ baseProfile, plotContent }),
-    });
-    const data = await res.json();
-    setResult(data.result);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ baseProfile, plotContent }),
+      });
+      const data = await res.json();
+      setResult(data.result);
+    } catch (e) {
+      setError("프로필 생성 중 오류가 발생했습니다. 다시 시도해주세요.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // 복사 함수
