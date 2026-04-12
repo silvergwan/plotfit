@@ -16,11 +16,17 @@ export default function Home() {
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
+  const [error, setError] = useState("");
 
   // -----------------------------
   // POST/api/generate
   // -----------------------------
   const handleGenerate = async () => {
+    if (!baseProfile.trim() || !plotContent.trim()) {
+      setError("프로필과 플롯 내용을 모두 입력해주세요.");
+      return;
+    }
+    setError("");
     setLoading(true);
     const res = await fetch("/api/generate", {
       method: "POST",
@@ -105,6 +111,7 @@ export default function Home() {
             value={plotContent}
             onChange={(e) => setPlotContent(e.target.value)}
           />
+          {error && <p className="text-red-400 text-sm mt-2 px-2">{error}</p>}
           <Button
             onClick={handleGenerate}
             label="프로필 생성하기"
