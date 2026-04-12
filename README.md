@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PlotFit
 
-## Getting Started
+> Zeta 유저들을 위한 플롯 맞춤형 프로필 생성 서비스
 
-First, run the development server:
+## 만든 이유
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Zeta를 쓰다 보면 누구나 겪는 문제가 있습니다.
+
+플롯마다 세계관, 캐릭터가 다른데, 자신의 대화 프로필은 하나뿐입니다.
+조선시대 궁중 배경 플롯에 현대식 프로필로 대화하면 AI가 세계관을 벗어난 엉뚱한 설정으로 응답하면서 몰입이 깨집니다.
+
+실제 유저 리뷰에도 이 불만이 직접 나와 있습니다.
+
+> "유저 프로필을 플롯마다 수동으로 수정해가면서 사용하는데 엄청 불편함"
+
+저도 그랬습니다. 매번 플롯 설명을 읽고 세계관을 파악하고 프로필을 수동으로 고쳐 쓰는 게 번거로웠습니다.
+그래서 이걸 자동화하면 어떨까 생각했고, 직접 만들었습니다.
+
+## 서비스 플로우
+
+```
+기본 대화 프로필 입력 + 플롯 내용 붙여넣기
+→ GPT API가 플롯 세계관 분석
+→ 세계관에 맞는 맞춤 프로필 생성
+→ 복사해서 Zeta에 붙여넣기
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 기술 스택
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| 영역     | 기술                                |
+| -------- | ----------------------------------- |
+| Frontend | Next.js 14 (App Router), TypeScript |
+| Styling  | Tailwind CSS                        |
+| AI       | GPT API (OpenAI)                    |
+| 배포     | Vercel                              |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 핵심 설계 결정
 
-## Learn More
+**왜 Chrome 확장 프로그램이 아닌 웹 서비스인가?**
 
-To learn more about Next.js, take a look at the following resources:
+초기에 확장 프로그램으로 기획했으나, Zeta는 앱 사용 비율이 압도적으로 높습니다.
+확장 프로그램은 모바일 앱에서 동작하지 않으므로, 플랫폼 독립적인 웹 서비스로 재설계했습니다.
+Zeta 앱/웹 어디서든 복사-붙여넣기로 사용 가능하도록 구현했습니다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 한계와 개선 방향
 
-## Deploy on Vercel
+- **현재**: 웹 서비스로 별도 접속 필요 → **개선**: Zeta 앱 내 공식 기능으로 통합 시 UX 극대화
+- **현재**: 단일 프로필 생성 → **개선**: 여러 플롯에 대한 프로필을 저장·관리하는 프로필 북
+- **현재**: 텍스트 기반 플롯 입력 → **개선**: Zeta 플롯 URL로 자동 파싱
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+_Zeta를 사랑하는 유저로서 직접 겪은 페인포인트를 해결하기 위해 만든 프로젝트입니다._
