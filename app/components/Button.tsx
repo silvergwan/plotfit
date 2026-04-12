@@ -1,16 +1,20 @@
+
+
 type ButtonProps = {
   onClick: () => void; // 함수
   label: string; // 문자열
+  loading: boolean;
 };
 
-export default function Button({ onClick, label }: ButtonProps) {
+export default function Button({ onClick, label, loading }: ButtonProps) {
   return (
-    <div className="px-4 mt-4">
+    <div className="mt-4">
       <button
         onClick={onClick}
-        className="w-full h-13 rounded-xl bg-[#6728FF] text-white font-medium text-[15px] p-3"
+        disabled={loading}
+        className="w-full h-13 rounded-xl bg-[#6728FF] text-white font-medium text-[15px] p-3 disabled:opacity-50"
       >
-        {label}
+        {loading ? "생성 중..." : label}
       </button>
     </div>
   );
