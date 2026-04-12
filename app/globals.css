@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    "Pretendard Variable",
+    -apple-system,
+    "system-ui",
+    Roboto,
+    "Noto Sans KR",
+    sans-serif;
+}
