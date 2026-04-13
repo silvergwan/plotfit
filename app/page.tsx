@@ -26,18 +26,29 @@ export default function Home() {
       setError("프로필과 플롯 내용을 모두 입력해주세요.");
       return;
     }
+
     setError("");
+    setLoading(true);
+
     try {
-      setLoading(true);
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ baseProfile, plotContent }),
       });
+
       const data = await res.json();
+
+      // res.ok로 HTTP 상태코드 기반 에러 처리
+      if (!res.ok) {
+        setError(data.error ?? "오류가 발생했습니다. 다시 시도해주세요.");
+        return;
+      }
+
       setResult(data.result);
-    } catch (e) {
-      setError("프로필 생성 중 오류가 발생했습니다. 다시 시도해주세요.");
+    } catch {
+      // 네트워크 단절 등 fetch 자체가 실패한 경우
+      setError("네트워크 오류가 발생했습니다. 연결을 확인해주세요.");
     } finally {
       setLoading(false);
     }
