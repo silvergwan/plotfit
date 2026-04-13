@@ -69,7 +69,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white">
       <Header />
-      <div className="max-w-6xl mx-auto px-6 flex gap-12 pt-20">
+      <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-12 pt-20">
         <div className="flex-1">
           <h1 className="text-5xl font-semibold leading-[1.05] tracking-tight mb-6 text-white">
             플롯에 맞는
