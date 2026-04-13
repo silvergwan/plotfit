@@ -71,7 +71,7 @@ export default function Home() {
       <Header />
       <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-12 pt-20">
         <div className="flex-1">
-          <h1 className="text-5xl font-semibold leading-[1.05] tracking-tight mb-[32px] text-white">
+          <h1 className="text-5xl font-semibold leading-[1.05] tracking-tight mb-8 text-white">
             플롯에 맞는
             <br />
             <span className="text-[#6728FF] font-bold">나만의 프로필</span>을
@@ -86,7 +86,7 @@ export default function Home() {
             AI가 세계관(플롯)에 맞는 맞춤 프로필을 만들어 드립니다.
           </p>
 
-          <div className="bg-[#111112] border border-white/[0.08] rounded-2xl p-4 flex flex-col mt-[32px]">
+          <div className="bg-[#111112] border border-white/8 rounded-2xl p-4 flex flex-col mt-8">
             <div className="flex justify-between items-center mb-3">
               <span className="text-[12px] font-medium text-[#787878] tracking-widest">
                 생성된 프로필
@@ -97,7 +97,7 @@ export default function Home() {
                   className={`flex items-center gap-1.5 text-[12px] px-3 py-1.5 rounded-lg border transition-colors ${
                     isCopy
                       ? "text-[#7c4dff] border-[#7c4dff]/30 bg-[#7c4dff]/5"
-                      : "text-[#888] border-white/[0.08] bg-[#1a1a1b] hover:bg-[#222] hover:text-[#ccc]"
+                      : "text-[#888] border-white/8 bg-[#1a1a1b] hover:bg-[#222] hover:text-[#ccc]"
                   }`}
                 >
                   {isCopy ? <Check size={13} /> : <Copy size={13} />}
