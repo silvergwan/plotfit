@@ -2,6 +2,8 @@
 
 > Zeta 유저를 위한 플롯 맞춤형 프로필 생성 서비스
 
+<img width="1470" height="836" alt="Image" src="https://github.com/user-attachments/assets/50b9b547-e3de-4d5b-94b4-e462f3450280" />
+
 ## 만든 이유
 
 Zeta에서 세계관이 짙은 플롯들을 쓰다 보면 기본 대화 프로필 하나로는 한계가 있습니다.
