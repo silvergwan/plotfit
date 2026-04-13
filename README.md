@@ -1,7 +1,8 @@
 # PlotFit
 
 > Zeta 유저를 위한 플롯 맞춤형 프로필 생성 서비스
-> <img width="1470" height="836" alt="Image" src="https://github.com/user-attachments/assets/50b9b547-e3de-4d5b-94b4-e462f3450280" />
+
+<img width="1470" height="836" alt="Image" src="https://github.com/user-attachments/assets/50b9b547-e3de-4d5b-94b4-e462f3450280" />
 
 ## 만든 이유
 
