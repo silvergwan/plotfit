@@ -78,11 +78,12 @@ export default function Home() {
             <br />
             만들어드립니다.
           </h1>
-          <p className="text-[#666] text-base max-w-lg leading-relaxed">
+          <p className="text-[#959595] text-base max-w-lg leading-relaxed">
             플롯마다 매번 프로필을 수동으로 고치고 계신가요?
             <br />
-            기본 대화 프로필과 플롯 내용을 넣으면, AI가 세계관(플롯)에 맞는 맞춤
-            프로필을 만들어 드립니다.
+            기본 대화 프로필과 플롯 내용을 넣으면,
+            <br />
+            AI가 세계관(플롯)에 맞는 맞춤 프로필을 만들어 드립니다.
           </p>
 
           {result && (
