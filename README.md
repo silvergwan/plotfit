@@ -2,7 +2,7 @@
 
 > Zeta 유저를 위한 플롯 맞춤형 프로필 생성 서비스
 
-<img width="1470" height="836" alt="Image" src="https://github.com/user-attachments/assets/50b9b547-e3de-4d5b-94b4-e462f3450280" />
+<img width="1470" height="836" alt="Image" src="https://github.com/user-attachments/assets/771987a3-2e4b-4106-bb18-2e74655406e5" />
 
 ## 만든 이유
 
@@ -26,7 +26,7 @@ Zeta는 앱 사용률이 압도적으로 높다는 걸 뒤늦게 깨달았습니
 ## 기술 스택
 
 | 영역     | 기술                                |
-|----------|-------------------------------------|
+| -------- | ----------------------------------- |
 | Frontend | Next.js 14 (App Router), TypeScript |
 | Styling  | Tailwind CSS                        |
 | AI       | GPT API (OpenAI gpt-4o-mini)        |
@@ -39,4 +39,5 @@ Zeta는 앱 사용률이 압도적으로 높다는 걸 뒤늦게 깨달았습니
 - 플롯 내용을 직접 붙여넣어야 함 → Zeta 플롯 URL 입력으로 자동 파싱 가능
 
 ## 어필
+
 _스캐터랩 사랑합니다, 진짜 가고싶어요._
