@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import Button from "./components/Button";
 import Textarea from "./components/Textarea";
 import { Copy, Check } from "lucide-react";
+import { track } from "@vercel/analytics";
 
 export default function Home() {
   const [baseProfile, setBaseProfile] = useState("");
@@ -21,6 +22,7 @@ export default function Home() {
   // -----------------------------
   // POST/api/generate
   // -----------------------------
+
   const handleGenerate = async () => {
     if (!baseProfile.trim() || !plotContent.trim()) {
       setError("프로필과 플롯 내용을 모두 입력해주세요.");
@@ -29,6 +31,9 @@ export default function Home() {
 
     setError("");
     setLoading(true);
+
+    // 이벤트 1: 생성 버튼 이벤트 기록
+    track("profile_generate_attempt");
 
     try {
       const res = await fetch("/api/generate", {
@@ -39,16 +44,29 @@ export default function Home() {
 
       const data = await res.json();
 
-      // res.ok로 HTTP 상태코드 기반 에러 처리
       if (!res.ok) {
         setError(data.error ?? "오류가 발생했습니다. 다시 시도해주세요.");
+
+        // 이벤트 2: 서버 에러 기록
+        // error_type에 에러메시지를 담아 에러 빈도 종류 파악
+        track("profile_generate_fail", {
+          error_type: data.error ?? "unknown_server_error",
+        });
+
         return;
       }
 
       setResult(data.result);
+
+      // 이벤트 3: 정상 프로필 생성 기록
+      track("profile_generate_success");
     } catch {
-      // 네트워크 단절 등 fetch 자체가 실패한 경우
       setError("네트워크 오류가 발생했습니다. 연결을 확인해주세요.");
+
+      // 이벤트 2-b: fetch 자체가 터진 경우
+      track("profile_generate_fail", {
+        error_type: "network_error",
+      });
     } finally {
       setLoading(false);
     }
@@ -60,6 +78,9 @@ export default function Home() {
 
     navigator.clipboard.writeText(result);
     setIsCopy(true);
+
+    // 생성 프로필 복사
+    track("profile_copy");
 
     setTimeout(() => {
       setIsCopy(false);
