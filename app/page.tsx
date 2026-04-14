@@ -69,7 +69,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white">
       <Header />
-      <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-12 pt-20">
+      <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-12 pt-20 md:items-start">
         <div className="flex-1">
           <h1 className="text-5xl font-semibold leading-[1.05] tracking-tight mb-8 text-white">
             플롯에 맞는
@@ -86,7 +86,7 @@ export default function Home() {
             AI가 세계관(플롯)에 맞는 맞춤 프로필을 만들어 드립니다.
           </p>
 
-          <div className="bg-[#111112] border border-white/8 rounded-2xl p-4 flex flex-col mt-8">
+          <div className="bg-[#111112] border border-white/8 rounded-2xl p-4 flex flex-col mt-8 max-h-150">
             <div className="flex justify-between items-center mb-3">
               <span className="text-[12px] font-medium text-[#787878] tracking-widest">
                 생성된 프로필
@@ -144,7 +144,7 @@ export default function Home() {
             )}
           </div>
         </div>
-        <div className="flex-1 bg-[#151516] p-6 rounded-2xl">
+        <div className="flex-1 bg-[#151516] p-6 rounded-2xl md:sticky md:top-20">
           <h3 className="px-2 mb-2">대화 프로필을 입력해주세요</h3>
           <Textarea
             placeholder="기본 프로필을 입력하세요.
