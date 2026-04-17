@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
-    "@vercel/kv": "^3.0.0",
     "lucide-react": "^1.8.0",
     "next": "16.2.3",
     "openai": "^6.34.0",
