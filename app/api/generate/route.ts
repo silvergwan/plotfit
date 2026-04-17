@@ -1,12 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { PLOT_PROFILE_SYSTEM_PROMPT } from "@/lib/prompts";
+import { checkRateLimit } from "@/lib/rateLimit"; // 레잇리밋
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 export async function POST(req: NextRequest) {
+  // Rate Lmit 체크
+  const forwarded = req.headers.get("x-forwarded-for");
+  const ip = forwarded?.split(",")[0].trim() ?? "unknown";
+
+  const { allowed, resetInSeconds } = checkRateLimit(ip);
+
+  if (!allowed) {
+    return NextResponse.json(
+      {
+        error: `요청이 너무 많습니다. ${resetInSeconds}초 후에 다시 시도해주세요.`,
+      },
+      {
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": "5",
+          "X-RateLimit-Remaining": "0",
+          "Retry-After": String(resetInSeconds),
+        },
+      },
+    );
+  }
+
   let baseProfile: string;
   let plotContent: string;
 
