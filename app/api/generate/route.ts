@@ -8,7 +8,7 @@ const client = new OpenAI({
 });
 
 export async function POST(req: NextRequest) {
-  // Rate Lmit 체크
+  // Rate Limit 체크
   const forwarded = req.headers.get("x-forwarded-for");
   const ip = forwarded?.split(",")[0].trim() ?? "unknown";
 
