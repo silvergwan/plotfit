@@ -1,18 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { PLOT_PROFILE_SYSTEM_PROMPT } from "@/lib/prompts";
-import { checkRateLimit } from "@/lib/rateLimit"; // 레잇리밋
+import { checkRateLimit } from "@/lib/rateLimit";
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 export async function POST(req: NextRequest) {
-  // Rate Limit 체크
-  const forwarded = req.headers.get("x-forwarded-for");
-  const ip = forwarded?.split(",")[0].trim() ?? "unknown";
+  const forwardedFor = req.headers.get("x-forwarded-for");
+  const realIp = req.headers.get("x-real-ip");
 
-  const { allowed, resetInSeconds } = checkRateLimit(ip);
+  const ip = forwardedFor?.split(",")[0]?.trim() || realIp || "unknown";
+
+  const { allowed, resetInSeconds } = await checkRateLimit(ip);
 
   if (!allowed) {
     return NextResponse.json(
@@ -40,6 +41,13 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json(
       { error: "요청 형식이 올바르지 않습니다." },
+      { status: 400 },
+    );
+  }
+
+  if (!baseProfile || !plotContent) {
+    return NextResponse.json(
+      { error: "필수 입력값이 누락되었습니다." },
       { status: 400 },
     );
   }
@@ -84,6 +92,7 @@ export async function POST(req: NextRequest) {
           { status: 500 },
         );
       }
+
       if (error.status === 429) {
         return NextResponse.json(
           { error: "요청이 너무 많습니다. 잠시 후 다시 시도해주세요." },
