@@ -1,17 +1,13 @@
-// rateLimit.ts
+import { redis } from "@/lib/redis";
 
-import { redis, connectRedis } from "@/lib/redis";
-
-const WINDOW_SECONDS = 60; // 1분
-const MAX_REQUESTS = 5; // 1분에 최대 5회
+const WINDOW_SECONDS = 60;
+const MAX_REQUESTS = 5;
 
 export async function checkRateLimit(ip: string): Promise<{
   allowed: boolean;
   remaining: number;
   resetInSeconds: number;
 }> {
-  await connectRedis();
-
   const key = `rate_limit:${ip}`;
 
   const current = await redis.incr(key);
@@ -33,7 +29,7 @@ export async function checkRateLimit(ip: string): Promise<{
 
   return {
     allowed: true,
-    remaining: MAX_REQUESTS - current,
+    remaining: Math.max(0, MAX_REQUESTS - current),
     resetInSeconds,
   };
 }
