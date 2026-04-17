@@ -1,7 +1,9 @@
+// route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { PLOT_PROFILE_SYSTEM_PROMPT } from "@/lib/prompts";
-import { checkRateLimit } from "@/lib/rateLimit"; // 레잇리밋
+import { checkRateLimit } from "@/lib/rateLimit";
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -12,7 +14,7 @@ export async function POST(req: NextRequest) {
   const forwarded = req.headers.get("x-forwarded-for");
   const ip = forwarded?.split(",")[0].trim() ?? "unknown";
 
-  const { allowed, resetInSeconds } = checkRateLimit(ip);
+  const { allowed, resetInSeconds } = await checkRateLimit(ip);
 
   if (!allowed) {
     return NextResponse.json(
