@@ -68,6 +68,7 @@ export default function Home() {
 
         const text = decoder.decode(value, { stream: true });
 
+        await sleep(60);
         setResult((prev) => prev + text);
       }
 
