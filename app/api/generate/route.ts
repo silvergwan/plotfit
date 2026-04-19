@@ -36,8 +36,8 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    baseProfile = body.baseProfile;
-    plotContent = body.plotContent;
+    baseProfile = body.baseProfile?.trim(); // trim 추가
+    plotContent = body.plotContent?.trim(); // //
   } catch {
     return NextResponse.json(
       { error: "요청 형식이 올바르지 않습니다." },
@@ -60,9 +60,10 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const completion = await client.chat.completions.create({
+    const stream = await client.chat.completions.create({
       model: "gpt-4o-mini",
       temperature: 0.7,
+      stream: true,
       messages: [
         { role: "system", content: PLOT_PROFILE_SYSTEM_PROMPT },
         {
@@ -72,16 +73,23 @@ export async function POST(req: NextRequest) {
       ],
     });
 
-    const result = completion.choices[0]?.message?.content;
+    const readable = new ReadableStream({
+      async start(controller) {
+        for await (const chunk of stream) {
+          const text = chunk.choices[0]?.delta?.content ?? "";
+          if (text) {
+            controller.enqueue(new TextEncoder().encode(text));
+          }
+        }
+        controller.close();
+      },
+    });
 
-    if (!result) {
-      return NextResponse.json(
-        { error: "AI가 응답을 생성하지 못했습니다. 다시 시도해주세요." },
-        { status: 500 },
-      );
-    }
-
-    return NextResponse.json({ result });
+    return new Response(readable, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+      },
+    });
   } catch (error) {
     if (error instanceof OpenAI.APIError) {
       console.error("OpenAI API Error:", error.status, error.message);
@@ -92,7 +100,6 @@ export async function POST(req: NextRequest) {
           { status: 500 },
         );
       }
-
       if (error.status === 429) {
         return NextResponse.json(
           { error: "요청이 너무 많습니다. 잠시 후 다시 시도해주세요." },

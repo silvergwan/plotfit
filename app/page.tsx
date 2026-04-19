@@ -31,8 +31,8 @@ export default function Home() {
 
     setError("");
     setLoading(true);
+    setResult(""); // 이전 결과 초기화
 
-    // 이벤트 1: 생성 버튼 이벤트 기록
     track("profile_generate_attempt");
 
     try {
@@ -42,28 +42,38 @@ export default function Home() {
         body: JSON.stringify({ baseProfile, plotContent }),
       });
 
-      const data = await res.json();
-
       if (!res.ok) {
+        const data = await res.json();
         setError(data.error ?? "오류가 발생했습니다. 다시 시도해주세요.");
-
-        // 이벤트 2: 서버 에러 기록
-        // error_type에 에러메시지를 담아 에러 빈도 종류 파악
         track("profile_generate_fail", {
           error_type: data.error ?? "unknown_server_error",
         });
-
         return;
       }
 
-      setResult(data.result);
+      const reader = res.body?.getReader();
+      const decoder = new TextDecoder();
 
-      // 이벤트 3: 정상 프로필 생성 기록
+      if (!reader) {
+        setError("스트림을 읽을 수 없습니다.");
+        return;
+      }
+
+      setLoading(false);
+
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) break;
+
+        const text = decoder.decode(value, { stream: true });
+
+        setResult((prev) => prev + text);
+      }
+
       track("profile_generate_success");
     } catch {
       setError("네트워크 오류가 발생했습니다. 연결을 확인해주세요.");
-
-      // 이벤트 2-b: fetch 자체가 터진 경우
       track("profile_generate_fail", {
         error_type: "network_error",
       });
@@ -72,20 +82,20 @@ export default function Home() {
     }
   };
 
-  // 복사 함수
-  const handleCopy = () => {
+  const handleCopy = async () => {
     if (isCopy) return;
-
-    navigator.clipboard.writeText(result);
+    await navigator.clipboard.writeText(result); // await 추가
     setIsCopy(true);
 
-    // 생성 프로필 복사
     track("profile_copy");
 
     setTimeout(() => {
       setIsCopy(false);
     }, 2 * 1000);
   };
+
+  const sleep = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white">
