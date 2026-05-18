@@ -1,27 +1,44 @@
 "use client";
-// next에서 이걸 쓰지 않으면 서버컴포넌트로 인식을 하여 브라우저 이벤트를 사용할 수가 없음
 
 import { useState } from "react";
-// useState는 사용자가 값을 입력하면 그 내용을 api로 전달하기 전에 가지고 있어야 보낼 수 있는데 그 저장소 역할을 함
 import Header from "./components/Header";
 import Button from "./components/Button";
 import Textarea from "./components/Textarea";
 import { Copy, Check } from "lucide-react";
 import { track } from "@vercel/analytics";
+import type { ProfileOutput } from "@/lib/schema/profile-schema";
 
 export default function Home() {
   const [baseProfile, setBaseProfile] = useState("");
-  // baseProfile은 상태이고, setBaseProfile은 상태 변경 함수임
-  // 상태를 단순 변수로 이해하면 안됨, 상태는 React가 값의 변경을 알아채고 리렌더링까지 하는 아주 고차원적 개념
   const [plotContent, setPlotContent] = useState("");
-  const [result, setResult] = useState("");
+
+  // 변경: result가 string → ProfileOutput | null로 바뀜
+  // 구조화된 데이터를 상태로 들고 있어야 각 필드를 따로 렌더링할 수 있음
+  const [result, setResult] = useState<ProfileOutput | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
   const [error, setError] = useState("");
 
-  // -----------------------------
-  // POST/api/generate
-  // -----------------------------
+  // 복사할 텍스트: JSON → 기존 #섹션 형식으로 조립
+  // 유저 입장에서 붙여넣는 형식은 그대로 유지
+  const buildCopyText = (data: ProfileOutput): string => {
+    const lines: string[] = [];
+
+    if (data.appearance) {
+      lines.push("#외형");
+      lines.push(data.appearance);
+      lines.push("");
+    }
+
+    lines.push("#특이사항");
+    lines.push(data.traits);
+    lines.push("");
+    lines.push("#플롯 내 위치");
+    lines.push(data.plot_position);
+
+    return lines.join("\n");
+  };
 
   const handleGenerate = async () => {
     if (!baseProfile.trim() || !plotContent.trim()) {
@@ -31,7 +48,7 @@ export default function Home() {
 
     setError("");
     setLoading(true);
-    setResult(""); // 이전 결과 초기화
+    setResult(null);
 
     track("profile_generate_attempt");
 
@@ -42,8 +59,10 @@ export default function Home() {
         body: JSON.stringify({ baseProfile, plotContent }),
       });
 
+      // 변경: 스트리밍 제거 → res.json() 한 번에 파싱
+      const data = await res.json();
+
       if (!res.ok) {
-        const data = await res.json();
         setError(data.error ?? "오류가 발생했습니다. 다시 시도해주세요.");
         track("profile_generate_fail", {
           error_type: data.error ?? "unknown_server_error",
@@ -51,27 +70,8 @@ export default function Home() {
         return;
       }
 
-      const reader = res.body?.getReader();
-      const decoder = new TextDecoder();
-
-      if (!reader) {
-        setError("스트림을 읽을 수 없습니다.");
-        return;
-      }
-
-      setLoading(false);
-
-      while (true) {
-        const { done, value } = await reader.read();
-
-        if (done) break;
-
-        const text = decoder.decode(value, { stream: true });
-
-        await sleep(60);
-        setResult((prev) => prev + text);
-      }
-
+      // data.data가 ProfileOutput 타입
+      setResult(data.data);
       track("profile_generate_success");
     } catch {
       setError("네트워크 오류가 발생했습니다. 연결을 확인해주세요.");
@@ -84,8 +84,9 @@ export default function Home() {
   };
 
   const handleCopy = async () => {
-    if (isCopy) return;
-    await navigator.clipboard.writeText(result); // await 추가
+    if (isCopy || !result) return;
+
+    await navigator.clipboard.writeText(buildCopyText(result));
     setIsCopy(true);
 
     track("profile_copy");
@@ -94,9 +95,6 @@ export default function Home() {
       setIsCopy(false);
     }, 2 * 1000);
   };
-
-  const sleep = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
 
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white">
@@ -155,7 +153,7 @@ export default function Home() {
               </div>
             )}
 
-            {/* Loading shimmer */}
+            {/* Loading shimmer — 기존과 동일 */}
             {loading && (
               <div className="flex-1 flex flex-col gap-2.5 py-2">
                 {[75, 90, 60, 85, 50, 80, 65].map((w, i) => (
@@ -168,14 +166,44 @@ export default function Home() {
               </div>
             )}
 
-            {/* 결과 텍스트 */}
+            {/* 결과 렌더링: JSON 필드를 섹션별로 표시 */}
             {!loading && result && (
-              <p className="flex-1 text-[13px] text-[#ccc] leading-relaxed whitespace-pre-wrap overflow-y-auto">
-                {result}
-              </p>
+              <div className="flex-1 flex flex-col gap-4 overflow-y-auto">
+                {/* appearance는 null이면 섹션 자체를 렌더링하지 않음 */}
+                {result.appearance && (
+                  <div>
+                    <p className="text-[11px] font-semibold text-[#6728FF] tracking-widest mb-1">
+                      #외형
+                    </p>
+                    <p className="text-[13px] text-[#ccc] leading-relaxed">
+                      {result.appearance}
+                    </p>
+                  </div>
+                )}
+
+                <div>
+                  <p className="text-[11px] font-semibold text-[#6728FF] tracking-widest mb-1">
+                    #특이사항
+                  </p>
+                  <p className="text-[13px] text-[#ccc] leading-relaxed">
+                    {result.traits}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-[11px] font-semibold text-[#6728FF] tracking-widest mb-1">
+                    #플롯 내 위치
+                  </p>
+                  <p className="text-[13px] text-[#ccc] leading-relaxed">
+                    {result.plot_position}
+                  </p>
+                </div>
+              </div>
             )}
           </div>
         </div>
+
+        {/* 입력 패널 — 기존과 동일 */}
         <div className="flex-1 bg-[#151516] p-6 rounded-2xl md:sticky md:top-20">
           <h3 className="px-2 mb-2">대화 프로필을 입력해주세요</h3>
           <Textarea
