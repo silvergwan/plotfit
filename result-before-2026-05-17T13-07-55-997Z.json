@@ -1,0 +1,122 @@
+{
+  "timestamp": "2026-05-17T13:07:56.000Z",
+  "phase": "before_refactoring",
+  "method": "few-shot / 자연어 스트리밍 / response_format 없음",
+  "total": 10,
+  "structureSuccess": 10,
+  "structureFail": 0,
+  "apiError": 0,
+  "structureFailRate": 0,
+  "details": [
+    {
+      "label": "대학생 세계관 (19세 고등학생 입력)",
+      "status": "success",
+      "output": "#특이사항  \n소심하지만 남들에게는 다정다감한 20세 남성 대학생이다.  \n\n#플롯 내 위치  \n대학생 일상 세계관 안에 있으며, 서이현의 집이라는 조용하고 고급스러운 공간에 함께 놓인 인물이다.  ",
+      "validation": {
+        "valid": true,
+        "hasTraits": true,
+        "hasPlotPosition": true,
+        "hasAppearance": false
+      }
+    },
+    {
+      "label": "회사/직장 세계관 (마케팅 직원)",
+      "status": "success",
+      "output": "#특이사항  \n차분하고 꼼꼼한 27세 여성 회사원이다.\n\n#플롯 내 위치  \n사내 부서 회의실과 업무 환경이 중심이 되는 회사 세계관에 속한 인물이다.",
+      "validation": {
+        "valid": true,
+        "hasTraits": true,
+        "hasPlotPosition": true,
+        "hasAppearance": false
+      }
+    },
+    {
+      "label": "고등학교 세계관 (활발한 남성)",
+      "status": "success",
+      "output": "#특이사항  \n활발하고 장난기가 많은 18세 남성 고등학생이다.\n\n#플롯 내 위치  \n고등학교 방송부와 축제 준비가 배경이 되는 학교 세계관에 속한 인물이다.",
+      "validation": {
+        "valid": true,
+        "hasTraits": true,
+        "hasPlotPosition": true,
+        "hasAppearance": false
+      }
+    },
+    {
+      "label": "판타지 세계관 (외형 정보 포함)",
+      "status": "success",
+      "output": "#외형\n168cm의 키에 붉은 머리와 날카로운 눈매를 지닌 여성이다.\n\n#특이사항\n독립적이고 고집이 센 24세 여성 마법사이다.\n\n#플롯 내 위치\n중세 판타지 왕국의 마법사 길드 소속으로, 마법 도서관과 마법 연구가 중심이 되는 세계관에 속한 인물이다.",
+      "validation": {
+        "valid": true,
+        "hasTraits": true,
+        "hasPlotPosition": true,
+        "hasAppearance": true
+      }
+    },
+    {
+      "label": "SF/사이버펑크 세계관",
+      "status": "success",
+      "output": "#특이사항\n냉정하고 분석적인 성격의 31세 남성 형사이다. 불면증이 있다.\n\n#플롯 내 위치\n사이버펑크 세계관 안에서 사이버 범죄 수사대 소속으로 활동하는 인물이다.",
+      "validation": {
+        "valid": true,
+        "hasTraits": true,
+        "hasPlotPosition": true,
+        "hasAppearance": false
+      }
+    },
+    {
+      "label": "현대 로맨스 세계관 (외형 없음)",
+      "status": "success",
+      "output": "#특이사항  \n밝고 수다스러운 22세 여성으로, 고양이를 3마리 키우고 있다.  \n\n#플롯 내 위치  \n현대 로맨스 세계관 안에 있으며, 서울 홍대 근처의 작은 독립 카페에서 일하는 알바생이다.",
+      "validation": {
+        "valid": true,
+        "hasTraits": true,
+        "hasPlotPosition": true,
+        "hasAppearance": false
+      }
+    },
+    {
+      "label": "다중 캐릭터 플롯",
+      "status": "success",
+      "output": "#특이사항  \n조용하고 관찰력이 뛰어난 25세 남성 대학원생이다.  \n\n#플롯 내 위치  \n판타지 왕국의 기사 훈련소에 속한 인물이며, 기사단 내부 계급 구조가 중심이 되는 세계관에 놓여 있다.  ",
+      "validation": {
+        "valid": true,
+        "hasTraits": true,
+        "hasPlotPosition": true,
+        "hasAppearance": false
+      }
+    },
+    {
+      "label": "외형 정보만 있는 케이스",
+      "status": "success",
+      "output": "#외형\n157cm의 키에 검은 단발 머리를 가진 피부가 하얀 편의 여성이다.\n\n#특이사항\n대학병원에서 레지던트로 활동하는 여성이다.\n\n#플롯 내 위치\n현대 의학 드라마의 대학병원 응급실 세계관에 속한 인물이다.",
+      "validation": {
+        "valid": true,
+        "hasTraits": true,
+        "hasPlotPosition": true,
+        "hasAppearance": true
+      }
+    },
+    {
+      "label": "특이사항이 많은 케이스",
+      "status": "success",
+      "output": "#특이사항  \n겉으론 차갑지만 속은 따뜻한 20세 남성 대학생이다. 전직 수영 선수이며, 오른손잡이이고, 단 것을 못 먹으며, 개를 무서워한다.  \n\n#플롯 내 위치  \n대학생 캠퍼스 세계관 안에 있으며, 체육대학 수영부 소속으로 동아리방과 전공 강의가 배경이 되는 인물이다.",
+      "validation": {
+        "valid": true,
+        "hasTraits": true,
+        "hasPlotPosition": true,
+        "hasAppearance": false
+      }
+    },
+    {
+      "label": "직업/신분 충돌 (직장인 → 고등학생)",
+      "status": "success",
+      "output": "#특이사항\n리더십이 강하고 책임감 있는 28세 여성 고등학생이다.\n\n#플롯 내 위치\n고등학교 학생회와 관련된 세계관에 속한 인물이다.",
+      "validation": {
+        "valid": true,
+        "hasTraits": true,
+        "hasPlotPosition": true,
+        "hasAppearance": false
+      }
+    }
+  ]
+}
