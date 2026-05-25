@@ -1,0 +1,788 @@
+{
+  "timestamp": "2026-05-25T08:14:24.332Z",
+  "phase": "before_refactoring_100cases",
+  "method": "원본 프롬프트 / 자연어 출력 / response_format 없음",
+  "total": 100,
+  "qualityPass": 87,
+  "qualityFail": 13,
+  "structureFail": 0,
+  "apiError": 0,
+  "structureFailRate": 0,
+  "qualityFailRate": 13,
+  "byCategory": {
+    "남성향": {
+      "total": 35,
+      "structurePass": 35,
+      "qualityPass": 29
+    },
+    "여성향": {
+      "total": 35,
+      "structurePass": 35,
+      "qualityPass": 31
+    },
+    "다인캐": {
+      "total": 15,
+      "structurePass": 15,
+      "qualityPass": 14
+    },
+    "세계관형": {
+      "total": 15,
+      "structurePass": 15,
+      "qualityPass": 13
+    }
+  },
+  "details": [
+    {
+      "label": "[1/100] 송예린 (대학생/MT) × P1",
+      "status": "quality_pass",
+      "plotId": "F01",
+      "profileId": "P1",
+      "category": "남성향"
+    },
+    {
+      "label": "[2/100] 송예린 (대학생/MT) × P2",
+      "status": "quality_pass",
+      "plotId": "F01",
+      "profileId": "P2",
+      "category": "남성향"
+    },
+    {
+      "label": "[3/100] 송예린 (대학생/MT) × P3",
+      "status": "quality_pass",
+      "plotId": "F01",
+      "profileId": "P3",
+      "category": "남성향"
+    },
+    {
+      "label": "[4/100] 송예린 (대학생/MT) × P4",
+      "status": "quality_pass",
+      "plotId": "F01",
+      "profileId": "P4",
+      "category": "남성향"
+    },
+    {
+      "label": "[5/100] 송예린 (대학생/MT) × P5",
+      "status": "quality_pass",
+      "plotId": "F01",
+      "profileId": "P5",
+      "category": "남성향"
+    },
+    {
+      "label": "[6/100] 세츠나 화이트 (판타지/마법 아카데미) × P1",
+      "status": "quality_pass",
+      "plotId": "F02",
+      "profileId": "P1",
+      "category": "남성향"
+    },
+    {
+      "label": "[7/100] 세츠나 화이트 (판타지/마법 아카데미) × P2",
+      "status": "quality_pass",
+      "plotId": "F02",
+      "profileId": "P2",
+      "category": "남성향"
+    },
+    {
+      "label": "[8/100] 세츠나 화이트 (판타지/마법 아카데미) × P3",
+      "status": "quality_pass",
+      "plotId": "F02",
+      "profileId": "P3",
+      "category": "남성향"
+    },
+    {
+      "label": "[9/100] 세츠나 화이트 (판타지/마법 아카데미) × P4",
+      "status": "quality_pass",
+      "plotId": "F02",
+      "profileId": "P4",
+      "category": "남성향"
+    },
+    {
+      "label": "[10/100] 세츠나 화이트 (판타지/마법 아카데미) × P5",
+      "status": "quality_pass",
+      "plotId": "F02",
+      "profileId": "P5",
+      "category": "남성향"
+    },
+    {
+      "label": "[11/100] 류지희 (현대/조직 보스) × P1",
+      "status": "quality_pass",
+      "plotId": "F03",
+      "profileId": "P1",
+      "category": "남성향"
+    },
+    {
+      "label": "[12/100] 류지희 (현대/조직 보스) × P2",
+      "status": "quality_pass",
+      "plotId": "F03",
+      "profileId": "P2",
+      "category": "남성향"
+    },
+    {
+      "label": "[13/100] 류지희 (현대/조직 보스) × P3",
+      "status": "quality_pass",
+      "plotId": "F03",
+      "profileId": "P3",
+      "category": "남성향"
+    },
+    {
+      "label": "[14/100] 류지희 (현대/조직 보스) × P4",
+      "status": "quality_pass",
+      "plotId": "F03",
+      "profileId": "P4",
+      "category": "남성향"
+    },
+    {
+      "label": "[15/100] 류지희 (현대/조직 보스) × P5",
+      "status": "quality_pass",
+      "plotId": "F03",
+      "profileId": "P5",
+      "category": "남성향"
+    },
+    {
+      "label": "[16/100] 칼리아 (판타지/왕국) × P1",
+      "status": "quality_pass",
+      "plotId": "F04",
+      "profileId": "P1",
+      "category": "남성향"
+    },
+    {
+      "label": "[17/100] 칼리아 (판타지/왕국) × P2",
+      "status": "quality_pass",
+      "plotId": "F04",
+      "profileId": "P2",
+      "category": "남성향"
+    },
+    {
+      "label": "[18/100] 칼리아 (판타지/왕국) × P3",
+      "status": "quality_pass",
+      "plotId": "F04",
+      "profileId": "P3",
+      "category": "남성향"
+    },
+    {
+      "label": "[19/100] 칼리아 (판타지/왕국) × P4",
+      "status": "quality_pass",
+      "plotId": "F04",
+      "profileId": "P4",
+      "category": "남성향"
+    },
+    {
+      "label": "[20/100] 칼리아 (판타지/왕국) × P5",
+      "status": "quality_fail",
+      "failures": [
+        "호감 취향 보존 누락"
+      ],
+      "plotId": "F04",
+      "profileId": "P5",
+      "category": "남성향",
+      "output": "#외형\n162cm, 50kg, 단정한 단발머리에 세련된 스타일이다.\n\n#특이사항\n매사에 당당하고 추진력이 좋으나, 내 사람에게 한없이 부드러운 28세 여성이다.\n\n#플롯 내 위치\n판타지 로맨스 세계관 안에 있으며, 왕국 아리엔의 왕궁 감옥이라는 공간에 놓인 인물이다."
+    },
+    {
+      "label": "[21/100] 서아린 (대학생/철벽녀 퀸카) × P1",
+      "status": "quality_pass",
+      "plotId": "F05",
+      "profileId": "P1",
+      "category": "남성향"
+    },
+    {
+      "label": "[22/100] 서아린 (대학생/철벽녀 퀸카) × P2",
+      "status": "quality_pass",
+      "plotId": "F05",
+      "profileId": "P2",
+      "category": "남성향"
+    },
+    {
+      "label": "[23/100] 서아린 (대학생/철벽녀 퀸카) × P3",
+      "status": "quality_pass",
+      "plotId": "F05",
+      "profileId": "P3",
+      "category": "남성향"
+    },
+    {
+      "label": "[24/100] 서아린 (대학생/철벽녀 퀸카) × P4",
+      "status": "quality_pass",
+      "plotId": "F05",
+      "profileId": "P4",
+      "category": "남성향"
+    },
+    {
+      "label": "[25/100] 서아린 (대학생/철벽녀 퀸카) × P5",
+      "status": "quality_pass",
+      "plotId": "F05",
+      "profileId": "P5",
+      "category": "남성향"
+    },
+    {
+      "label": "[26/100] 서이현 (대학생/여사친) × P1",
+      "status": "quality_pass",
+      "plotId": "F06",
+      "profileId": "P1",
+      "category": "남성향"
+    },
+    {
+      "label": "[27/100] 서이현 (대학생/여사친) × P2",
+      "status": "quality_pass",
+      "plotId": "F06",
+      "profileId": "P2",
+      "category": "남성향"
+    },
+    {
+      "label": "[28/100] 서이현 (대학생/여사친) × P3",
+      "status": "quality_pass",
+      "plotId": "F06",
+      "profileId": "P3",
+      "category": "남성향"
+    },
+    {
+      "label": "[29/100] 서이현 (대학생/여사친) × P4",
+      "status": "quality_pass",
+      "plotId": "F06",
+      "profileId": "P4",
+      "category": "남성향"
+    },
+    {
+      "label": "[30/100] 서이현 (대학생/여사친) × P5",
+      "status": "quality_pass",
+      "plotId": "F06",
+      "profileId": "P5",
+      "category": "남성향"
+    },
+    {
+      "label": "[31/100] 일진녀 수현 (고등학교) × P1",
+      "status": "quality_fail",
+      "failures": [
+        "고등학교 세계관인데 '고등학생' 없음"
+      ],
+      "plotId": "F07",
+      "profileId": "P1",
+      "category": "남성향",
+      "output": "#특이사항  \n겉모습은 차가워 보이지만 속정 깊고 눈물이 많은 24세 남성이다. 남다른 체격에도 불구하고 귀여운 캐릭터 굿즈를 수집하는 취미가 있다.\n\n#플롯 내 위치  \n고등학교 세계관에서 체육교육과의 학생으로, 수업 중 까칠한 일진 여학생과 함께 텅 빈 교실에 놓인 인물이다."
+    },
+    {
+      "label": "[32/100] 일진녀 수현 (고등학교) × P2",
+      "status": "quality_fail",
+      "failures": [
+        "고등학교 세계관인데 '고등학생' 없음"
+      ],
+      "plotId": "F07",
+      "profileId": "P2",
+      "category": "남성향",
+      "output": "#특이사항  \n매사에 당당하고 추진력이 좋으나, 내 사람에겐 한없이 부드러운 28세 여성이다. 자신보다 요리를 잘하거나 미식에 진심인 사람에게 호감을 느낀다.  \n\n#플롯 내 위치  \n고등학교 세계관 안에 있으며, 같은 반 친구들과 체육시간을 보내는 교실이라는 공간에 놓인 인물이다."
+    },
+    {
+      "label": "[33/100] 일진녀 수현 (고등학교) × P3",
+      "status": "quality_fail",
+      "failures": [
+        "고등학교 세계관인데 '고등학생' 없음"
+      ],
+      "plotId": "F07",
+      "profileId": "P3",
+      "category": "남성향",
+      "output": "#특이사항  \n긍정적이고 유쾌한 성격의 31세 남성이다.  \n\n#플롯 내 위치  \n고등학교 세계관 안에 있으며, 수업을 듣는 교실이라는 공간에 함께 놓인 인물이다."
+    },
+    {
+      "label": "[34/100] 일진녀 수현 (고등학교) × P4",
+      "status": "quality_fail",
+      "failures": [
+        "고등학교 세계관인데 '고등학생' 없음"
+      ],
+      "plotId": "F07",
+      "profileId": "P4",
+      "category": "남성향",
+      "output": "#특이사항  \n섬세하고 예민한 성격의 22세 여성 대학생이다. 비 오는 날 특유의 냄새와 감성을 좋아한다.  \n\n#플롯 내 위치  \n고등학교 세계관 안에 속해 있으며, 수현과 같은 반인 체육시간의 빈 교실이라는 공간에 함께 놓인 인물이다."
+    },
+    {
+      "label": "[35/100] 일진녀 수현 (고등학교) × P5",
+      "status": "quality_fail",
+      "failures": [
+        "고등학교 세계관인데 '고등학생' 없음"
+      ],
+      "plotId": "F07",
+      "profileId": "P5",
+      "category": "남성향",
+      "output": "#특이사항  \n매사에 당당하고 추진력이 좋지만 내 사람에겐 한없이 부드러운 28세 여성이다. 자신보다 요리를 잘하거나 미식에 진심인 사람에게 호감을 느낀다.  \n\n#플롯 내 위치  \n고등학교 세계관 안에 있으며, 같은 반 학생으로 최은관과 함께 텅 빈 교실이라는 공간에 놓인 인물이다.  "
+    },
+    {
+      "label": "[36/100] 이량 (판타지/역사) × P1",
+      "status": "quality_pass",
+      "plotId": "F08",
+      "profileId": "P1",
+      "category": "여성향"
+    },
+    {
+      "label": "[37/100] 이량 (판타지/역사) × P2",
+      "status": "quality_fail",
+      "failures": [
+        "호감 취향 보존 누락"
+      ],
+      "plotId": "F08",
+      "profileId": "P2",
+      "category": "여성향",
+      "output": "#외형\n162cm, 50kg의 단정한 단발머리에 세련된 스타일이다.\n\n#특이사항\n매사에 당당하고 추진력이 좋지만, 내 사람에겐 한없이 부드러운 28세 여성이다.\n\n#플롯 내 위치\n황제 이량의 호위무사로서 황궁과 정무가 중심이 되는 궁궐 세계관에 속한 인물이다."
+    },
+    {
+      "label": "[38/100] 이량 (판타지/역사) × P3",
+      "status": "quality_pass",
+      "plotId": "F08",
+      "profileId": "P3",
+      "category": "여성향"
+    },
+    {
+      "label": "[39/100] 이량 (판타지/역사) × P4",
+      "status": "quality_pass",
+      "plotId": "F08",
+      "profileId": "P4",
+      "category": "여성향"
+    },
+    {
+      "label": "[40/100] 이량 (판타지/역사) × P5",
+      "status": "quality_fail",
+      "failures": [
+        "호감 취향 보존 누락"
+      ],
+      "plotId": "F08",
+      "profileId": "P5",
+      "category": "여성향",
+      "output": "#외형\n162cm, 50kg의 단정한 단발머리에 세련된 스타일이다.\n\n#특이사항\n매사에 당당하고 추진력이 좋으나, 내 사람에겐 한없이 부드러운 28세 여성이다.\n\n#플롯 내 위치\n판타지 세계관의 화월국에서 황궁과 정무가 배경이 되는 인물이다."
+    },
+    {
+      "label": "[41/100] 박지용 (현대/소꿉친구 연인) × P1",
+      "status": "quality_pass",
+      "plotId": "F09",
+      "profileId": "P1",
+      "category": "여성향"
+    },
+    {
+      "label": "[42/100] 박지용 (현대/소꿉친구 연인) × P2",
+      "status": "quality_pass",
+      "plotId": "F09",
+      "profileId": "P2",
+      "category": "여성향"
+    },
+    {
+      "label": "[43/100] 박지용 (현대/소꿉친구 연인) × P3",
+      "status": "quality_pass",
+      "plotId": "F09",
+      "profileId": "P3",
+      "category": "여성향"
+    },
+    {
+      "label": "[44/100] 박지용 (현대/소꿉친구 연인) × P4",
+      "status": "quality_pass",
+      "plotId": "F09",
+      "profileId": "P4",
+      "category": "여성향"
+    },
+    {
+      "label": "[45/100] 박지용 (현대/소꿉친구 연인) × P5",
+      "status": "quality_pass",
+      "plotId": "F09",
+      "profileId": "P5",
+      "category": "여성향"
+    },
+    {
+      "label": "[46/100] 허태윤 (현대/군대) × P1",
+      "status": "quality_pass",
+      "plotId": "F10",
+      "profileId": "P1",
+      "category": "여성향"
+    },
+    {
+      "label": "[47/100] 허태윤 (현대/군대) × P2",
+      "status": "quality_pass",
+      "plotId": "F10",
+      "profileId": "P2",
+      "category": "여성향"
+    },
+    {
+      "label": "[48/100] 허태윤 (현대/군대) × P3",
+      "status": "quality_pass",
+      "plotId": "F10",
+      "profileId": "P3",
+      "category": "여성향"
+    },
+    {
+      "label": "[49/100] 허태윤 (현대/군대) × P4",
+      "status": "quality_pass",
+      "plotId": "F10",
+      "profileId": "P4",
+      "category": "여성향"
+    },
+    {
+      "label": "[50/100] 허태윤 (현대/군대) × P5",
+      "status": "quality_fail",
+      "failures": [
+        "호감 취향 보존 누락"
+      ],
+      "plotId": "F10",
+      "profileId": "P5",
+      "category": "여성향",
+      "output": "#외형\n162cm, 50kg, 단정한 단발머리에 세련된 스타일이다.\n\n#특이사항\n매사에 당당하고 추진력이 좋으며, 내 사람에겐 한없이 부드러운 28세 여성 인테리어 디자이너이다.\n\n#플롯 내 위치\n군대 부대라는 공간 안에서 허태윤과의 재회를 중심으로 한 인물이다."
+    },
+    {
+      "label": "[51/100] 도해신 (현대/사채업자) × P1",
+      "status": "quality_pass",
+      "plotId": "F11",
+      "profileId": "P1",
+      "category": "여성향"
+    },
+    {
+      "label": "[52/100] 도해신 (현대/사채업자) × P2",
+      "status": "quality_pass",
+      "plotId": "F11",
+      "profileId": "P2",
+      "category": "여성향"
+    },
+    {
+      "label": "[53/100] 도해신 (현대/사채업자) × P3",
+      "status": "quality_pass",
+      "plotId": "F11",
+      "profileId": "P3",
+      "category": "여성향"
+    },
+    {
+      "label": "[54/100] 도해신 (현대/사채업자) × P4",
+      "status": "quality_pass",
+      "plotId": "F11",
+      "profileId": "P4",
+      "category": "여성향"
+    },
+    {
+      "label": "[55/100] 도해신 (현대/사채업자) × P5",
+      "status": "quality_pass",
+      "plotId": "F11",
+      "profileId": "P5",
+      "category": "여성향"
+    },
+    {
+      "label": "[56/100] 최시우 (대학생/조폭 후배) × P1",
+      "status": "quality_pass",
+      "plotId": "F12",
+      "profileId": "P1",
+      "category": "여성향"
+    },
+    {
+      "label": "[57/100] 최시우 (대학생/조폭 후배) × P2",
+      "status": "quality_pass",
+      "plotId": "F12",
+      "profileId": "P2",
+      "category": "여성향"
+    },
+    {
+      "label": "[58/100] 최시우 (대학생/조폭 후배) × P3",
+      "status": "quality_pass",
+      "plotId": "F12",
+      "profileId": "P3",
+      "category": "여성향"
+    },
+    {
+      "label": "[59/100] 최시우 (대학생/조폭 후배) × P4",
+      "status": "quality_pass",
+      "plotId": "F12",
+      "profileId": "P4",
+      "category": "여성향"
+    },
+    {
+      "label": "[60/100] 최시우 (대학생/조폭 후배) × P5",
+      "status": "quality_pass",
+      "plotId": "F12",
+      "profileId": "P5",
+      "category": "여성향"
+    },
+    {
+      "label": "[61/100] 차우진 (현대/소꿉친구 동거) × P1",
+      "status": "quality_pass",
+      "plotId": "F13",
+      "profileId": "P1",
+      "category": "여성향"
+    },
+    {
+      "label": "[62/100] 차우진 (현대/소꿉친구 동거) × P2",
+      "status": "quality_fail",
+      "failures": [
+        "호감 취향 보존 누락"
+      ],
+      "plotId": "F13",
+      "profileId": "P2",
+      "category": "여성향",
+      "output": "#외형\n162cm, 50kg, 단정한 단발머리에 세련된 스타일이다.\n\n#특이사항\n매사에 당당하고 추진력이 좋으나, 내 사람에겐 한없이 부드러운 28세 여성이다.\n\n#플롯 내 위치\n자취 동거 세계관 안에 있으며, 어린이집부터 함께한 소꿉친구와 함께 생활하는 인물이다."
+    },
+    {
+      "label": "[63/100] 차우진 (현대/소꿉친구 동거) × P3",
+      "status": "quality_pass",
+      "plotId": "F13",
+      "profileId": "P3",
+      "category": "여성향"
+    },
+    {
+      "label": "[64/100] 차우진 (현대/소꿉친구 동거) × P4",
+      "status": "quality_pass",
+      "plotId": "F13",
+      "profileId": "P4",
+      "category": "여성향"
+    },
+    {
+      "label": "[65/100] 차우진 (현대/소꿉친구 동거) × P5",
+      "status": "quality_pass",
+      "plotId": "F13",
+      "profileId": "P5",
+      "category": "여성향"
+    },
+    {
+      "label": "[66/100] 권도현 (현대/스트리머) × P1",
+      "status": "quality_pass",
+      "plotId": "F14",
+      "profileId": "P1",
+      "category": "여성향"
+    },
+    {
+      "label": "[67/100] 권도현 (현대/스트리머) × P2",
+      "status": "quality_pass",
+      "plotId": "F14",
+      "profileId": "P2",
+      "category": "여성향"
+    },
+    {
+      "label": "[68/100] 권도현 (현대/스트리머) × P3",
+      "status": "quality_pass",
+      "plotId": "F14",
+      "profileId": "P3",
+      "category": "여성향"
+    },
+    {
+      "label": "[69/100] 권도현 (현대/스트리머) × P4",
+      "status": "quality_pass",
+      "plotId": "F14",
+      "profileId": "P4",
+      "category": "여성향"
+    },
+    {
+      "label": "[70/100] 권도현 (현대/스트리머) × P5",
+      "status": "quality_pass",
+      "plotId": "F14",
+      "profileId": "P5",
+      "category": "여성향"
+    },
+    {
+      "label": "[71/100] 강다은 & 정소이 (대학생/자취) × P1",
+      "status": "quality_pass",
+      "plotId": "M01",
+      "profileId": "P1",
+      "category": "다인캐"
+    },
+    {
+      "label": "[72/100] 강다은 & 정소이 (대학생/자취) × P2",
+      "status": "quality_pass",
+      "plotId": "M01",
+      "profileId": "P2",
+      "category": "다인캐"
+    },
+    {
+      "label": "[73/100] 강다은 & 정소이 (대학생/자취) × P3",
+      "status": "quality_pass",
+      "plotId": "M01",
+      "profileId": "P3",
+      "category": "다인캐"
+    },
+    {
+      "label": "[74/100] 강다은 & 정소이 (대학생/자취) × P4",
+      "status": "quality_pass",
+      "plotId": "M01",
+      "profileId": "P4",
+      "category": "다인캐"
+    },
+    {
+      "label": "[75/100] 강다은 & 정소이 (대학생/자취) × P5",
+      "status": "quality_pass",
+      "plotId": "M01",
+      "profileId": "P5",
+      "category": "다인캐"
+    },
+    {
+      "label": "[76/100] 용사파티 & 짐꾼 (판타지/무인도) × P1",
+      "status": "quality_pass",
+      "plotId": "M02",
+      "profileId": "P1",
+      "category": "다인캐"
+    },
+    {
+      "label": "[77/100] 용사파티 & 짐꾼 (판타지/무인도) × P2",
+      "status": "quality_fail",
+      "failures": [
+        "호감 취향 보존 누락"
+      ],
+      "plotId": "M02",
+      "profileId": "P2",
+      "category": "다인캐",
+      "output": "#외형\n162cm, 50kg, 단정한 단발머리에 세련된 스타일이다.\n\n#특이사항\n매사에 당당하고 추진력이 좋으나, 내 사람에겐 한없이 부드러운 28세 여성 인테리어 디자이너이다.\n\n#플롯 내 위치\n판타지 세계관 안에 있으며, 용사파티의 짐꾼으로서 무인도에서 생존을 위한 역할을 수행하는 인물이다."
+    },
+    {
+      "label": "[78/100] 용사파티 & 짐꾼 (판타지/무인도) × P3",
+      "status": "quality_pass",
+      "plotId": "M02",
+      "profileId": "P3",
+      "category": "다인캐"
+    },
+    {
+      "label": "[79/100] 용사파티 & 짐꾼 (판타지/무인도) × P4",
+      "status": "quality_pass",
+      "plotId": "M02",
+      "profileId": "P4",
+      "category": "다인캐"
+    },
+    {
+      "label": "[80/100] 용사파티 & 짐꾼 (판타지/무인도) × P5",
+      "status": "quality_pass",
+      "plotId": "M02",
+      "profileId": "P5",
+      "category": "다인캐"
+    },
+    {
+      "label": "[81/100] 정하온 & 박시은 & 최주하 (대학생/동안) × P1",
+      "status": "quality_pass",
+      "plotId": "M03",
+      "profileId": "P1",
+      "category": "다인캐"
+    },
+    {
+      "label": "[82/100] 정하온 & 박시은 & 최주하 (대학생/동안) × P2",
+      "status": "quality_pass",
+      "plotId": "M03",
+      "profileId": "P2",
+      "category": "다인캐"
+    },
+    {
+      "label": "[83/100] 정하온 & 박시은 & 최주하 (대학생/동안) × P3",
+      "status": "quality_pass",
+      "plotId": "M03",
+      "profileId": "P3",
+      "category": "다인캐"
+    },
+    {
+      "label": "[84/100] 정하온 & 박시은 & 최주하 (대학생/동안) × P4",
+      "status": "quality_pass",
+      "plotId": "M03",
+      "profileId": "P4",
+      "category": "다인캐"
+    },
+    {
+      "label": "[85/100] 정하온 & 박시은 & 최주하 (대학생/동안) × P5",
+      "status": "quality_pass",
+      "plotId": "M03",
+      "profileId": "P5",
+      "category": "다인캐"
+    },
+    {
+      "label": "[86/100] 에테르니아 RPG (판타지/이세계) × P1",
+      "status": "quality_pass",
+      "plotId": "W01",
+      "profileId": "P1",
+      "category": "세계관형"
+    },
+    {
+      "label": "[87/100] 에테르니아 RPG (판타지/이세계) × P2",
+      "status": "quality_fail",
+      "failures": [
+        "호감 취향 보존 누락"
+      ],
+      "plotId": "W01",
+      "profileId": "P2",
+      "category": "세계관형",
+      "output": "#외형\n162cm, 50kg의 단정한 단발머리에 세련된 스타일을 지닌 여성이다.\n\n#특이사항\n매사에 당당하고 추진력이 좋지만, 내 사람에게는 한없이 부드러운 28세 여성 인테리어 디자이너이다.\n\n#플롯 내 위치\n에테르니아 대륙의 드라코니아 제국과 실바네아 왕국, 귀족과 기사단이 중심이 되는 판타지 세계관에 속한 인물이다."
+    },
+    {
+      "label": "[88/100] 에테르니아 RPG (판타지/이세계) × P3",
+      "status": "quality_pass",
+      "plotId": "W01",
+      "profileId": "P3",
+      "category": "세계관형"
+    },
+    {
+      "label": "[89/100] 에테르니아 RPG (판타지/이세계) × P4",
+      "status": "quality_pass",
+      "plotId": "W01",
+      "profileId": "P4",
+      "category": "세계관형"
+    },
+    {
+      "label": "[90/100] 에테르니아 RPG (판타지/이세계) × P5",
+      "status": "quality_pass",
+      "plotId": "W01",
+      "profileId": "P5",
+      "category": "세계관형"
+    },
+    {
+      "label": "[91/100] 아르케논 헌터 (현대판타지) × P1",
+      "status": "quality_pass",
+      "plotId": "W02",
+      "profileId": "P1",
+      "category": "세계관형"
+    },
+    {
+      "label": "[92/100] 아르케논 헌터 (현대판타지) × P2",
+      "status": "quality_pass",
+      "plotId": "W02",
+      "profileId": "P2",
+      "category": "세계관형"
+    },
+    {
+      "label": "[93/100] 아르케논 헌터 (현대판타지) × P3",
+      "status": "quality_pass",
+      "plotId": "W02",
+      "profileId": "P3",
+      "category": "세계관형"
+    },
+    {
+      "label": "[94/100] 아르케논 헌터 (현대판타지) × P4",
+      "status": "quality_pass",
+      "plotId": "W02",
+      "profileId": "P4",
+      "category": "세계관형"
+    },
+    {
+      "label": "[95/100] 아르케논 헌터 (현대판타지) × P5",
+      "status": "quality_pass",
+      "plotId": "W02",
+      "profileId": "P5",
+      "category": "세계관형"
+    },
+    {
+      "label": "[96/100] 마법학교 아카데미 (판타지/아카데미) × P1",
+      "status": "quality_pass",
+      "plotId": "W03",
+      "profileId": "P1",
+      "category": "세계관형"
+    },
+    {
+      "label": "[97/100] 마법학교 아카데미 (판타지/아카데미) × P2",
+      "status": "quality_pass",
+      "plotId": "W03",
+      "profileId": "P2",
+      "category": "세계관형"
+    },
+    {
+      "label": "[98/100] 마법학교 아카데미 (판타지/아카데미) × P3",
+      "status": "quality_pass",
+      "plotId": "W03",
+      "profileId": "P3",
+      "category": "세계관형"
+    },
+    {
+      "label": "[99/100] 마법학교 아카데미 (판타지/아카데미) × P4",
+      "status": "quality_pass",
+      "plotId": "W03",
+      "profileId": "P4",
+      "category": "세계관형"
+    },
+    {
+      "label": "[100/100] 마법학교 아카데미 (판타지/아카데미) × P5",
+      "status": "quality_fail",
+      "failures": [
+        "호감 취향 보존 누락"
+      ],
+      "plotId": "W03",
+      "profileId": "P5",
+      "category": "세계관형",
+      "output": "#외형\n162cm, 50kg, 단정한 단발머리에 세련된 스타일이다.\n\n#특이사항\n매사에 당당하고 추진력이 좋으나, 내 사람에겐 한없이 부드러운 성격의 28세 여성이다.\n\n#플롯 내 위치\n마법학교 아카데미 세계관 안에 속한 인물이며, 마법과 등급 시스템이 중심이 되는 환경에 놓인 인물이다."
+    }
+  ]
+}
