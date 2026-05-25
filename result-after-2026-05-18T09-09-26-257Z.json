@@ -1,0 +1,114 @@
+{
+  "timestamp": "2026-05-18T09:09:26.260Z",
+  "phase": "after_refactoring",
+  "method": "response_format:json_object + Zod 검증 + 재시도",
+  "total": 11,
+  "qualitySuccess": 11,
+  "qualityFail": 0,
+  "zodFail": 0,
+  "jsonFail": 0,
+  "apiError": 0,
+  "structureFailRate": 0,
+  "qualityFailRate": 0,
+  "details": [
+    {
+      "label": "대학생 세계관 (19세 고등학생 입력)",
+      "status": "quality_pass",
+      "output": {
+        "appearance": null,
+        "traits": "소심하지만 남들에게는 다정다감한 20세 남성 대학생이다.",
+        "plot_position": "대학생 일상 세계관 안에 있으며, 서이현의 집이라는 공간에 함께 놓인 인물이다."
+      }
+    },
+    {
+      "label": "회사/직장 세계관 (마케팅 직원)",
+      "status": "quality_pass",
+      "output": {
+        "appearance": null,
+        "traits": "차분하고 꼼꼼한 성격의 27세 여성 회사원이다.",
+        "plot_position": "회사 내부와 업무 환경이 중심이 되는 사내 세계관에 속한 인물이다."
+      }
+    },
+    {
+      "label": "고등학교 세계관 (활발한 남성)",
+      "status": "quality_pass",
+      "output": {
+        "appearance": null,
+        "traits": "활발하고 장난기가 많은 18세 남성 고등학생이다.",
+        "plot_position": "고등학교 방송부와 축제 준비가 배경이 되는 학교 세계관에 속한 인물이다."
+      }
+    },
+    {
+      "label": "판타지 세계관 (외형 정보 포함)",
+      "status": "quality_pass",
+      "output": {
+        "appearance": "168cm의 키에 붉은 머리와 날카로운 눈매를 가진 여성이다.",
+        "traits": "독립적이고 고집이 센 24세 여성 마법사이다.",
+        "plot_position": "중세 판타지 왕국 내 마법사 길드 소속으로, 마법 도서관에서 연구하는 인물이다."
+      }
+    },
+    {
+      "label": "SF/사이버펑크 세계관",
+      "status": "quality_pass",
+      "output": {
+        "appearance": null,
+        "traits": "냉정하고 분석적인 31세 남성 형사로, 불면증을 앓고 있다.",
+        "plot_position": "사이버 범죄 수사대 소속으로, 2089년 서울의 사이버펑크 세계관에 위치한 인물이다."
+      }
+    },
+    {
+      "label": "현대 로맨스 세계관 (외형 없음)",
+      "status": "quality_pass",
+      "output": {
+        "appearance": null,
+        "traits": "밝고 수다스러운 22세 여성이다. 고양이 3마리를 키운다.",
+        "plot_position": "현대 로맨스 세계관 안에 있으며, 서울 홍대 근처 작은 독립 카페에서 일하는 알바생이다."
+      }
+    },
+    {
+      "label": "다중 캐릭터 플롯",
+      "status": "quality_pass",
+      "output": {
+        "appearance": null,
+        "traits": "조용하고 관찰력이 뛰어난 25세 남성 기사 훈련소의 견습 기사이다.",
+        "plot_position": "판타지 왕국의 기사 훈련소에 속한 인물로, 기사단 내부의 계급 구조와 관계가 있는 위치에 있다."
+      }
+    },
+    {
+      "label": "외형 정보만 있는 케이스",
+      "status": "quality_pass",
+      "output": {
+        "appearance": "157cm의 키에 검은 단발을 가진 피부가 하얀 편인 여성이다.",
+        "traits": "20세 여성 대학생이다.",
+        "plot_position": "대학생 세계관 안에 있으며, 대학병원 응급실이라는 장소에서 레지던트와 인턴이 중심이 되는 상황에 놓인 인물이다."
+      }
+    },
+    {
+      "label": "특이사항이 많은 케이스",
+      "status": "quality_pass",
+      "output": {
+        "appearance": null,
+        "traits": "겉으론 차갑지만 속은 따뜻한 20세 남성 대학생이다. 전직 수영 선수이며, 오른손잡이이고, 단 것을 못 먹으며, 개를 무서워한다.",
+        "plot_position": "대학생 캠퍼스 내 체육대학 수영부 소속의 인물이다."
+      }
+    },
+    {
+      "label": "직업/신분 충돌 (직장인 → 고등학생)",
+      "status": "quality_pass",
+      "output": {
+        "appearance": null,
+        "traits": "리더십이 강하고 책임감 있는 28세 여성 고등학생이다.",
+        "plot_position": "고등학교 학생회와 수학여행 준비가 중심이 되는 학교 세계관에 속한 인물이다."
+      }
+    },
+    {
+      "label": "판타지 세계관 + 호감 취향 보존 (신규)",
+      "status": "quality_pass",
+      "output": {
+        "appearance": "170cm의 키에 평범한 남성보다 왜소한 체형의 남성이다.",
+        "traits": "소심하지만 남들에게는 다정다감한 19세 남성 집사이다. 자신보다 키가 큰 여성에게 호감을 느낀다.",
+        "plot_position": "귀족 가문과 집사 관계가 중심이 되는 판타지 세계관 안에 속한 인물이다."
+      }
+    }
+  ]
+}
