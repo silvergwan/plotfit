@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "./components/Header";
 import Button from "./components/Button";
 import Textarea from "./components/Textarea";
 import { Copy, Check } from "lucide-react";
-import { track } from "@vercel/analytics";
+import { initMixpanel, trackEvent } from "@/lib/mixpanel";
 import type { ProfileOutput } from "@/lib/schema/profile-schema";
 
 export default function Home() {
@@ -19,6 +19,13 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
   const [error, setError] = useState("");
+
+  const hasTrackedInput = useRef({ base: false, plot: false });
+  // Mixpanel 초기화 + 페이지 진입 이벤트
+  useEffect(() => {
+    initMixpanel();
+    trackEvent("page_viewed");
+  }, []);
 
   // 복사할 텍스트: JSON → 기존 #섹션 형식으로 조립
   // 유저 입장에서 붙여넣는 형식은 그대로 유지
@@ -50,7 +57,7 @@ export default function Home() {
     setLoading(true);
     setResult(null);
 
-    track("profile_generate_attempt");
+    trackEvent("generate_clicked");
 
     try {
       const res = await fetch("/api/generate", {
@@ -64,7 +71,7 @@ export default function Home() {
 
       if (!res.ok) {
         setError(data.error ?? "오류가 발생했습니다. 다시 시도해주세요.");
-        track("profile_generate_fail", {
+        trackEvent("generate_failed", {
           error_type: data.error ?? "unknown_server_error",
         });
         return;
@@ -72,12 +79,10 @@ export default function Home() {
 
       // data.data가 ProfileOutput 타입
       setResult(data.data);
-      track("profile_generate_success");
+      trackEvent("generate_success");
     } catch {
       setError("네트워크 오류가 발생했습니다. 연결을 확인해주세요.");
-      track("profile_generate_fail", {
-        error_type: "network_error",
-      });
+      trackEvent("generate_failed", { error_type: "network_error" });
     } finally {
       setLoading(false);
     }
@@ -89,7 +94,7 @@ export default function Home() {
     await navigator.clipboard.writeText(buildCopyText(result));
     setIsCopy(true);
 
-    track("profile_copy");
+    trackEvent("profile_copied");
 
     setTimeout(() => {
       setIsCopy(false);
@@ -221,13 +226,25 @@ export default function Home() {
 - 독서를 좋아함, 생각보단 다부진 몸
 "
             value={baseProfile}
-            onChange={(e) => setBaseProfile(e.target.value)}
+            onChange={(e) => {
+              setBaseProfile(e.target.value);
+              if (!hasTrackedInput.current.base && e.target.value.length > 0) {
+                trackEvent("input_started", { field: "base_profile" });
+                hasTrackedInput.current.base = true;
+              }
+            }}
           />
           <h3 className="px-2 pt-6 mb-2">플롯(캐릭터)의 내용을 복붙해주세요</h3>
           <Textarea
             placeholder="플롯 내용을 붙여넣으세요"
             value={plotContent}
-            onChange={(e) => setPlotContent(e.target.value)}
+            onChange={(e) => {
+              setPlotContent(e.target.value);
+              if (!hasTrackedInput.current.plot && e.target.value.length > 0) {
+                trackEvent("input_started", { field: "plot_content" });
+                hasTrackedInput.current.plot = true;
+              }
+            }}
           />
           {error && <p className="text-red-400 text-sm mt-2 px-2">{error}</p>}
           <Button
