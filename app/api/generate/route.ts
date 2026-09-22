@@ -24,6 +24,7 @@ import {
   type ProfileOutput,
 } from "@/lib/schema/profile-schema";
 import { checkRateLimit } from "@/lib/rateLimit";
+import { GenerateInputSchema } from "@/lib/schema/generate-input-schema";
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -103,12 +104,42 @@ async function generateProfile(
 
 // ── API Route 핸들러 ─────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
-  // Rate Limit 체크 (기존 로직 그대로 유지)
+  // 잘못된 입력은 Redis 비용/할당량을 소비하지 않고 거절한다.
+  // 유효한 입력도 반드시 요청 제한을 통과해야 OpenAI를 호출한다.
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json(
+      { error: "요청 본문이 올바른 JSON이 아닙니다." },
+      { status: 400 },
+    );
+  }
+
+  const input = GenerateInputSchema.safeParse(body);
+  if (!input.success) {
+    return NextResponse.json(
+      { error: input.error.issues[0].message },
+      { status: 400 },
+    );
+  }
+  const { baseProfile, plotContent } = input.data;
+
   const forwardedFor = req.headers.get("x-forwarded-for");
   const realIp = req.headers.get("x-real-ip");
   const ip = forwardedFor?.split(",")[0]?.trim() || realIp || "unknown";
 
-  const { allowed, resetInSeconds } = await checkRateLimit(ip);
+  let rateLimit: Awaited<ReturnType<typeof checkRateLimit>>;
+  try {
+    rateLimit = await checkRateLimit(ip);
+  } catch {
+    // 제한 여부를 확인할 수 없으면 유료 생성을 허용하지 않는다 (fail closed).
+    return NextResponse.json(
+      { error: "일시적인 서비스 장애입니다. 잠시 후 다시 시도해주세요." },
+      { status: 503 },
+    );
+  }
+  const { allowed, resetInSeconds } = rateLimit;
 
   if (!allowed) {
     return NextResponse.json(
@@ -123,35 +154,6 @@ export async function POST(req: NextRequest) {
           "Retry-After": String(resetInSeconds),
         },
       },
-    );
-  }
-
-  // 입력 파싱 및 검증 (기존 로직 그대로 유지)
-  let baseProfile: string;
-  let plotContent: string;
-
-  try {
-    const body = await req.json();
-    baseProfile = body.baseProfile?.trim();
-    plotContent = body.plotContent?.trim();
-  } catch {
-    return NextResponse.json(
-      { error: "요청 형식이 올바르지 않습니다." },
-      { status: 400 },
-    );
-  }
-
-  if (!baseProfile || !plotContent) {
-    return NextResponse.json(
-      { error: "필수 입력값이 누락되었습니다." },
-      { status: 400 },
-    );
-  }
-
-  if (baseProfile.length > 2000 || plotContent.length > 10000) {
-    return NextResponse.json(
-      { error: "입력값이 너무 깁니다." },
-      { status: 400 },
     );
   }
 
