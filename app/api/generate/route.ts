@@ -18,7 +18,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
-import { STRUCTURED_PROFILE_SYSTEM_PROMPT } from "@/lib/structured-profile-prompt";
+import { buildStructuredProfilePrompt } from "@/lib/structured-profile-prompt";
 import type { ProfileInput } from "@/lib/profile";
 import {
   ProfileOutputSchema,
@@ -50,7 +50,7 @@ async function generateProfile(
       // 단, JSON 구조까지 강제하지는 않음 → Zod가 그 역할을 함
       response_format: { type: "json_object" },
       messages: [
-        { role: "system", content: STRUCTURED_PROFILE_SYSTEM_PROMPT },
+        { role: "system", content: buildStructuredProfilePrompt(profile) },
         {
           role: "user",
           content: JSON.stringify({ profile, plotContent }),

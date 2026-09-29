@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Header from "./components/Header";
 import Button from "./components/Button";
 import Textarea from "./components/Textarea";
+import GenerationLoading from "./components/GenerationLoading";
 import { Copy, Check } from "lucide-react";
 import { track } from "@vercel/analytics";
 import type { ProfileOutput } from "@/lib/schema/profile-schema";
@@ -27,6 +28,19 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
   const [error, setError] = useState("");
+  const [generationError, setGenerationError] = useState("");
+  const resultPanel = useRef<HTMLDivElement>(null);
+  const requestInFlight = useRef(false);
+
+  useEffect(() => {
+    if (loading || result || generationError) {
+      resultPanel.current?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start",
+      });
+      resultPanel.current?.focus({ preventScroll: true });
+    }
+  }, [loading, result, generationError]);
 
   // 복사할 텍스트: JSON → 기존 #섹션 형식으로 조립
   // 유저 입장에서 붙여넣는 형식은 그대로 유지
@@ -49,7 +63,7 @@ export default function Home() {
   };
 
   const handleGenerate = async () => {
-    if (loading) return;
+    if (requestInFlight.current) return;
     const input = GenerateInputSchema.safeParse({ profile, plotContent });
     if (!input.success) {
       setError(input.error.issues[0].message);
@@ -57,10 +71,17 @@ export default function Home() {
     }
 
     setError("");
+    setGenerationError("");
+    requestInFlight.current = true;
     setLoading(true);
     setResult(null);
+    setIsCopy(false);
 
-    track("profile_generate_attempt");
+    // 분석 전송 실패가 생성 동작을 막지 않게 한다.
+    const trackGeneration = (event: string, properties?: Record<string, string>) => {
+      try { track(event, properties); } catch { /* 생성 흐름을 계속 진행한다. */ }
+    };
+    trackGeneration("profile_generate_attempt");
 
     try {
       const res = await fetch("/api/generate", {
@@ -73,8 +94,8 @@ export default function Home() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? "오류가 발생했습니다. 다시 시도해주세요.");
-        track("profile_generate_fail", {
+        setGenerationError(data.error ?? "오류가 발생했습니다. 다시 시도해주세요.");
+        trackGeneration("profile_generate_fail", {
           error_type: data.error ?? "unknown_server_error",
         });
         return;
@@ -82,13 +103,14 @@ export default function Home() {
 
       // data.data가 ProfileOutput 타입
       setResult(data.data);
-      track("profile_generate_success");
+      trackGeneration("profile_generate_success");
     } catch {
-      setError("네트워크 오류가 발생했습니다. 연결을 확인해주세요.");
-      track("profile_generate_fail", {
+      setGenerationError("요청을 완료하지 못했습니다. 연결을 확인하고 다시 시도해주세요.");
+      trackGeneration("profile_generate_fail", {
         error_type: "network_error",
       });
     } finally {
+      requestInFlight.current = false;
       setLoading(false);
     }
   };
@@ -126,10 +148,10 @@ export default function Home() {
             AI가 세계관(플롯)에 맞는 맞춤 프로필을 만들어 드립니다.
           </p>
 
-          <div className="bg-[#111112] border border-white/8 rounded-2xl p-4 flex flex-col mt-8 max-h-150">
+          <div ref={resultPanel} tabIndex={-1} aria-label="프로필 생성 결과" className="bg-[#111112] border border-white/8 rounded-2xl p-4 flex flex-col mt-8 min-h-80 max-h-150 scroll-mt-6 focus-visible:outline-2 focus-visible:outline-[#a78bfa]">
             <div className="flex justify-between items-center mb-3">
               <span className="text-[12px] font-medium text-[#787878] tracking-widest">
-                생성된 프로필
+                {loading ? "프로필 생성 중" : "생성된 프로필"}
               </span>
               {result && (
                 <button
@@ -147,7 +169,7 @@ export default function Home() {
             </div>
 
             {/* Empty state */}
-            {!loading && !result && (
+            {!loading && !result && !generationError && (
               <div className="flex-1 flex flex-col items-center justify-center gap-3 py-12">
                 <div className="w-12 h-12 rounded-xl border border-dashed border-white/9 flex items-center justify-center">
                   <span className="text-white/40 text-2xl">+</span>
@@ -163,16 +185,12 @@ export default function Home() {
               </div>
             )}
 
-            {/* Loading shimmer — 기존과 동일 */}
-            {loading && (
-              <div className="flex-1 flex flex-col gap-2.5 py-2">
-                {[75, 90, 60, 85, 50, 80, 65].map((w, i) => (
-                  <div
-                    key={i}
-                    className="h-3 rounded-md bg-[#1e1e1f] animate-pulse"
-                    style={{ width: `${w}%`, animationDelay: `${i * 80}ms` }}
-                  />
-                ))}
+            {loading && <GenerationLoading />}
+            {!loading && generationError && (
+              <div className="py-6">
+                <p role="alert" className="text-sm text-red-300">{generationError}</p>
+                <p className="mt-2 text-xs text-[#aaa]">입력한 내용은 그대로 남아 있어요.</p>
+                <Button onClick={handleGenerate} label="다시 시도하기" loading={false} />
               </div>
             )}
 
