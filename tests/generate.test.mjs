@@ -8,7 +8,13 @@ import ts from "typescript";
 
 const require = createRequire(import.meta.url);
 const root = new URL("../", import.meta.url);
-const validInput = { baseProfile: "기본 프로필", plotContent: "플롯 내용" };
+const emptyProfile = () => Object.fromEntries(
+  ["appearance", "personality", "background", "other"].map((key) => [key, { text: "", preserve: true }]),
+);
+const validInput = {
+  profile: { ...emptyProfile(), personality: { text: "기본 프로필", preserve: true } },
+  plotContent: "플롯 내용",
+};
 const output = { appearance: null, traits: "성실함", plot_position: "동료" };
 
 // 기존 TypeScript로 실제 서버 모듈을 메모리에서 변환한다.
@@ -109,7 +115,11 @@ test("정상 입력: trim, 응답 계약, 실제 요청 제한과 생성 설정 
   const { calls, send } = setup();
   const response = await send(
     JSON.stringify({
-      baseProfile: "  기본 프로필 \n",
+      profile: {
+        ...emptyProfile(),
+        personality: { text: "  기본 프로필 \n", preserve: true },
+        background: { text: "  경찰을 꿈꿈  ", preserve: false },
+      },
       plotContent: "\t플롯 내용  ",
     }),
   );
@@ -136,10 +146,14 @@ test("정상 입력: trim, 응답 계약, 실제 요청 제한과 생성 설정 
   assert.equal(calls.openai[0].model, "gpt-4o-mini");
   assert.equal(calls.openai[0].temperature, 0.7);
   assert.equal(calls.openai[0].response_format.type, "json_object");
-  assert.equal(
-    calls.openai[0].messages[1].content,
-    "[기본 프로필]\n기본 프로필\n\n[플롯 내용]\n플롯 내용",
-  );
+  assert.deepEqual(JSON.parse(calls.openai[0].messages[1].content), {
+    profile: {
+      ...emptyProfile(),
+      personality: { text: "기본 프로필", preserve: true },
+      background: { text: "경찰을 꿈꿈", preserve: false },
+    },
+    plotContent: "플롯 내용",
+  });
 });
 
 const invalidBodies = [
@@ -151,7 +165,7 @@ const invalidBodies = [
   ]),
   ["두 필드 누락", "{}"],
 ];
-for (const field of ["baseProfile", "plotContent"]) {
+for (const field of ["profile", "plotContent"]) {
   const missing = { ...validInput };
   delete missing[field];
   invalidBodies.push([`${field} 누락`, JSON.stringify(missing)]);
@@ -161,13 +175,27 @@ for (const field of ["baseProfile", "plotContent"]) {
       JSON.stringify({ ...validInput, [field]: value }),
     ]);
   }
-  invalidBodies.push([
-    `${field} 길이 초과`,
-    JSON.stringify({
-      ...validInput,
-      [field]: "가".repeat(field === "baseProfile" ? 2001 : 10001),
-    }),
-  ]);
+}
+invalidBodies.push(
+  ["빈 프로필", JSON.stringify({ ...validInput, profile: emptyProfile() })],
+  ["공백뿐인 프로필", JSON.stringify({ ...validInput, profile: { ...emptyProfile(), other: { text: " \t\n ", preserve: false } } })],
+  ["플롯 길이 초과", JSON.stringify({ ...validInput, plotContent: "가".repeat(10001) })],
+  ["프로필 합계 초과", JSON.stringify({ ...validInput, profile: {
+    ...emptyProfile(),
+    appearance: { text: "가".repeat(1000), preserve: true },
+    background: { text: "나".repeat(1001), preserve: false },
+  } })],
+  ["기존 문자열 요청은 거절", JSON.stringify({ baseProfile: "기본 프로필", plotContent: "플롯 내용" })],
+);
+for (const key of Object.keys(emptyProfile())) {
+  const missing = structuredClone(validInput);
+  delete missing.profile[key];
+  invalidBodies.push([`${key} 항목 누락`, JSON.stringify(missing)]);
+  for (const section of [null, "text", [], {}, { text: 12, preserve: true }, { text: "설정" }, { text: "설정", preserve: "false" }, { text: "설정", preserve: null }]) {
+    invalidBodies.push([`${key} 잘못된 항목 ${JSON.stringify(section)}`, JSON.stringify({
+      ...validInput, profile: { ...validInput.profile, [key]: section },
+    })]);
+  }
 }
 for (const [name, body] of invalidBodies) {
   test(`400 및 Redis/OpenAI 호출 없음: ${name}`, async () => {
@@ -185,13 +213,29 @@ test("trim 후 정확히 2,000/10,000자 입력과 다섯 번째 요청 허용",
   const { calls, send } = setup({ count: 5 });
   const response = await send(
     JSON.stringify({
-      baseProfile: ` ${"가".repeat(2000)} `,
+      profile: {
+        ...emptyProfile(),
+        appearance: { text: ` ${"가".repeat(1000)} `, preserve: true },
+        background: { text: ` ${"나".repeat(1000)} `, preserve: false },
+      },
       plotContent: ` ${"나".repeat(10000)} `,
     }),
   );
   assert.equal(response.status, 200);
   assert.equal(calls.openai.length, 1);
 });
+
+for (const key of Object.keys(emptyProfile())) {
+  for (const preserve of [true, false]) {
+    test(`${key}만 작성해도 허용하고 유지 여부 ${preserve}를 모델에 전달`, async () => {
+      const { calls, send } = setup();
+      const input = { profile: { ...emptyProfile(), [key]: { text: "설정", preserve } }, plotContent: "플롯" };
+      const response = await send(JSON.stringify(input));
+      assert.equal(response.status, 200);
+      assert.deepEqual(JSON.parse(calls.openai[0].messages[1].content), input);
+    });
+  }
+}
 
 test("여섯 번째 요청은 429, 기존 헤더 유지, OpenAI 호출 없음", async () => {
   const { calls, send } = setup({ count: 6 });
