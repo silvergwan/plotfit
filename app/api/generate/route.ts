@@ -26,13 +26,10 @@ import {
 import { checkRateLimit } from "@/lib/rateLimit";
 import { GenerateInputSchema } from "@/lib/schema/generate-input-schema";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 // ── 재시도 포함 생성 함수 ────────────────────────────────────────────────────
 // maxRetries: 최초 1회 + 재시도 maxRetries회 = 총 maxRetries+1회 시도
 async function generateProfile(
+  client: OpenAI,
   baseProfile: string,
   plotContent: string,
   maxRetries: number = 2,
@@ -125,6 +122,15 @@ export async function POST(req: NextRequest) {
   }
   const { baseProfile, plotContent } = input.data;
 
+  // 빌드 중에는 서버 모듈만 로드한다. 자격 증명은 실제 요청에서 확인한다.
+  const apiKey = process.env.OPENAI_API_KEY?.trim();
+  if (!apiKey) {
+    return NextResponse.json(
+      { error: "서버 설정 오류입니다. 관리자에게 문의해주세요." },
+      { status: 500 },
+    );
+  }
+
   const forwardedFor = req.headers.get("x-forwarded-for");
   const realIp = req.headers.get("x-real-ip");
   const ip = forwardedFor?.split(",")[0]?.trim() || realIp || "unknown";
@@ -159,8 +165,9 @@ export async function POST(req: NextRequest) {
 
   // 생성 실행
   try {
+    const client = new OpenAI({ apiKey });
     const startTime = Date.now();
-    const result = await generateProfile(baseProfile, plotContent);
+    const result = await generateProfile(client, baseProfile, plotContent);
     const durationMs = Date.now() - startTime;
 
     // 응답: data + _meta

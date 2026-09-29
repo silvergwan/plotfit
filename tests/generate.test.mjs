@@ -14,7 +14,7 @@ const output = { appearance: null, traits: "성실함", plot_position: "동료" 
 // 기존 TypeScript로 실제 서버 모듈을 메모리에서 변환한다.
 // 외부 SDK는 모킹하고, NextResponse/Zod 및 요청 제한 구현은 그대로 실행한다.
 // 허용하지 않은 import는 실패시켜 실수로 실제 외부 SDK를 로드하지 않는다.
-function setup({ count = 1, failRedis, failOpenAI = false } = {}) {
+function setup({ count = 1, failRedis, failOpenAI = false, apiKey = "mock-only" } = {}) {
   const calls = { redis: [], openai: [] };
   const redis = Object.fromEntries(
     ["incr", "expire", "ttl"].map((method) => [
@@ -27,6 +27,9 @@ function setup({ count = 1, failRedis, failOpenAI = false } = {}) {
     ]),
   );
   class OpenAI {
+    constructor({ apiKey }) {
+      if (!apiKey) throw new Error("Missing credentials");
+    }
     static APIError = class extends Error {};
     chat = {
       completions: {
@@ -66,7 +69,7 @@ function setup({ count = 1, failRedis, failOpenAI = false } = {}) {
         module: loadedModule,
         exports: loadedModule.exports,
         require: sandboxRequire,
-        process: { env: { OPENAI_API_KEY: "mock-only" } },
+        process: { env: { OPENAI_API_KEY: apiKey } },
         console: { error() {} },
         setTimeout,
       },
@@ -88,6 +91,18 @@ function setup({ count = 1, failRedis, failOpenAI = false } = {}) {
       }),
     );
   return { calls, send };
+}
+
+for (const apiKey of [null, "", "   "]) {
+  test(`키 미설정 시 모듈 로드 성공, 요청은 500: ${JSON.stringify(apiKey)}`, async () => {
+    const { calls, send } = setup({ apiKey });
+    const response = await send();
+    assert.equal(response.status, 500);
+    assert.deepEqual(await response.json(), {
+      error: "서버 설정 오류입니다. 관리자에게 문의해주세요.",
+    });
+    assert.deepEqual(calls, { redis: [], openai: [] });
+  });
 }
 
 test("정상 입력: trim, 응답 계약, 실제 요청 제한과 생성 설정 유지", async () => {
