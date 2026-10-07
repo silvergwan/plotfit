@@ -6,7 +6,7 @@
  *   After:  단건 JSON 응답 → Zod 검증 → 실패 시 최대 2회 재시도
  *
  * 왜 스트리밍을 제거했는가:
- *   - 현재 출력이 300자 제한이라 스트리밍 체감 효과가 없음
+ *   - 세 필드의 완성된 JSON을 검증한 뒤 반환
  *   - JSON을 스트리밍으로 받으면 파싱 타이밍이 복잡해짐
  *   - 구조 검증(Zod)은 완전한 JSON이 도착한 후에만 가능
  *
@@ -18,7 +18,8 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
-import { PLOT_PROFILE_SYSTEM_PROMPT } from "@/lib/prompts";
+import { buildStructuredProfilePrompt } from "@/lib/structured-profile-prompt";
+import type { ProfileInput } from "@/lib/profile";
 import {
   ProfileOutputSchema,
   type ProfileOutput,
@@ -30,7 +31,7 @@ import { GenerateInputSchema } from "@/lib/schema/generate-input-schema";
 // maxRetries: 최초 1회 + 재시도 maxRetries회 = 총 maxRetries+1회 시도
 async function generateProfile(
   client: OpenAI,
-  baseProfile: string,
+  profile: ProfileInput,
   plotContent: string,
   maxRetries: number = 2,
 ): Promise<{
@@ -49,10 +50,10 @@ async function generateProfile(
       // 단, JSON 구조까지 강제하지는 않음 → Zod가 그 역할을 함
       response_format: { type: "json_object" },
       messages: [
-        { role: "system", content: PLOT_PROFILE_SYSTEM_PROMPT },
+        { role: "system", content: buildStructuredProfilePrompt(profile) },
         {
           role: "user",
-          content: `[기본 프로필]\n${baseProfile}\n\n[플롯 내용]\n${plotContent}`,
+          content: JSON.stringify({ profile, plotContent }),
         },
       ],
     });
@@ -120,7 +121,7 @@ export async function POST(req: NextRequest) {
       { status: 400 },
     );
   }
-  const { baseProfile, plotContent } = input.data;
+  const { profile, plotContent } = input.data;
 
   // 빌드 중에는 서버 모듈만 로드한다. 자격 증명은 실제 요청에서 확인한다.
   const apiKey = process.env.OPENAI_API_KEY?.trim();
@@ -167,7 +168,7 @@ export async function POST(req: NextRequest) {
   try {
     const client = new OpenAI({ apiKey });
     const startTime = Date.now();
-    const result = await generateProfile(client, baseProfile, plotContent);
+    const result = await generateProfile(client, profile, plotContent);
     const durationMs = Date.now() - startTime;
 
     // 응답: data + _meta

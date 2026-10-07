@@ -1,16 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Header from "./components/Header";
 import Button from "./components/Button";
 import Textarea from "./components/Textarea";
+import GenerationLoading from "./components/GenerationLoading";
 import { Copy, Check } from "lucide-react";
 import { track } from "@vercel/analytics";
 import type { ProfileOutput } from "@/lib/schema/profile-schema";
+import { GenerateInputSchema } from "@/lib/schema/generate-input-schema";
+import { createEmptyProfile, getProfileLength, PROFILE_FIELDS, PROFILE_MAX_LENGTH, PLOT_MAX_LENGTH, type ProfileField, type ProfileInput } from "@/lib/profile";
 
 export default function Home() {
-  const [baseProfile, setBaseProfile] = useState("");
+  const [profile, setProfile] = useState(createEmptyProfile);
   const [plotContent, setPlotContent] = useState("");
+  const profileLength = getProfileLength(profile);
+  const plotLength = plotContent.trim().length;
+
+  const updateProfile = (key: ProfileField, update: Partial<ProfileInput[ProfileField]>) => {
+    setProfile((current) => ({ ...current, [key]: { ...current[key], ...update } }));
+  };
 
   // 변경: result가 string → ProfileOutput | null로 바뀜
   // 구조화된 데이터를 상태로 들고 있어야 각 필드를 따로 렌더링할 수 있음
@@ -19,6 +28,19 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
   const [error, setError] = useState("");
+  const [generationError, setGenerationError] = useState("");
+  const resultPanel = useRef<HTMLDivElement>(null);
+  const requestInFlight = useRef(false);
+
+  useEffect(() => {
+    if (loading || result || generationError) {
+      resultPanel.current?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start",
+      });
+      resultPanel.current?.focus({ preventScroll: true });
+    }
+  }, [loading, result, generationError]);
 
   // 복사할 텍스트: JSON → 기존 #섹션 형식으로 조립
   // 유저 입장에서 붙여넣는 형식은 그대로 유지
@@ -41,30 +63,39 @@ export default function Home() {
   };
 
   const handleGenerate = async () => {
-    if (!baseProfile.trim() || !plotContent.trim()) {
-      setError("프로필과 플롯 내용을 모두 입력해주세요.");
+    if (requestInFlight.current) return;
+    const input = GenerateInputSchema.safeParse({ profile, plotContent });
+    if (!input.success) {
+      setError(input.error.issues[0].message);
       return;
     }
 
     setError("");
+    setGenerationError("");
+    requestInFlight.current = true;
     setLoading(true);
     setResult(null);
+    setIsCopy(false);
 
-    track("profile_generate_attempt");
+    // 분석 전송 실패가 생성 동작을 막지 않게 한다.
+    const trackGeneration = (event: string, properties?: Record<string, string>) => {
+      try { track(event, properties); } catch { /* 생성 흐름을 계속 진행한다. */ }
+    };
+    trackGeneration("profile_generate_attempt");
 
     try {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ baseProfile, plotContent }),
+        body: JSON.stringify(input.data),
       });
 
       // 변경: 스트리밍 제거 → res.json() 한 번에 파싱
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? "오류가 발생했습니다. 다시 시도해주세요.");
-        track("profile_generate_fail", {
+        setGenerationError(data.error ?? "오류가 발생했습니다. 다시 시도해주세요.");
+        trackGeneration("profile_generate_fail", {
           error_type: data.error ?? "unknown_server_error",
         });
         return;
@@ -72,13 +103,14 @@ export default function Home() {
 
       // data.data가 ProfileOutput 타입
       setResult(data.data);
-      track("profile_generate_success");
+      trackGeneration("profile_generate_success");
     } catch {
-      setError("네트워크 오류가 발생했습니다. 연결을 확인해주세요.");
-      track("profile_generate_fail", {
+      setGenerationError("요청을 완료하지 못했습니다. 연결을 확인하고 다시 시도해주세요.");
+      trackGeneration("profile_generate_fail", {
         error_type: "network_error",
       });
     } finally {
+      requestInFlight.current = false;
       setLoading(false);
     }
   };
@@ -116,10 +148,10 @@ export default function Home() {
             AI가 세계관(플롯)에 맞는 맞춤 프로필을 만들어 드립니다.
           </p>
 
-          <div className="bg-[#111112] border border-white/8 rounded-2xl p-4 flex flex-col mt-8 max-h-150">
+          <div ref={resultPanel} tabIndex={-1} aria-label="프로필 생성 결과" className="bg-[#111112] border border-white/8 rounded-2xl p-4 flex flex-col mt-8 min-h-80 max-h-150 scroll-mt-6 focus-visible:outline-2 focus-visible:outline-[#a78bfa]">
             <div className="flex justify-between items-center mb-3">
               <span className="text-[12px] font-medium text-[#787878] tracking-widest">
-                생성된 프로필
+                {loading ? "프로필 생성 중" : "생성된 프로필"}
               </span>
               {result && (
                 <button
@@ -137,7 +169,7 @@ export default function Home() {
             </div>
 
             {/* Empty state */}
-            {!loading && !result && (
+            {!loading && !result && !generationError && (
               <div className="flex-1 flex flex-col items-center justify-center gap-3 py-12">
                 <div className="w-12 h-12 rounded-xl border border-dashed border-white/9 flex items-center justify-center">
                   <span className="text-white/40 text-2xl">+</span>
@@ -153,16 +185,12 @@ export default function Home() {
               </div>
             )}
 
-            {/* Loading shimmer — 기존과 동일 */}
-            {loading && (
-              <div className="flex-1 flex flex-col gap-2.5 py-2">
-                {[75, 90, 60, 85, 50, 80, 65].map((w, i) => (
-                  <div
-                    key={i}
-                    className="h-3 rounded-md bg-[#1e1e1f] animate-pulse"
-                    style={{ width: `${w}%`, animationDelay: `${i * 80}ms` }}
-                  />
-                ))}
+            {loading && <GenerationLoading />}
+            {!loading && generationError && (
+              <div className="py-6">
+                <p role="alert" className="text-sm text-red-300">{generationError}</p>
+                <p className="mt-2 text-xs text-[#aaa]">입력한 내용은 그대로 남아 있어요.</p>
+                <Button onClick={handleGenerate} label="다시 시도하기" loading={false} />
               </div>
             )}
 
@@ -203,33 +231,63 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 입력 패널 — 기존과 동일 */}
-        <div className="flex-1 bg-[#151516] p-6 rounded-2xl md:sticky md:top-20">
-          <h3 className="px-2 mb-2">대화 프로필을 입력해주세요</h3>
+        <div className="flex-1 min-w-0 bg-[#151516] p-6 rounded-2xl mb-12">
+          <h2 className="text-lg font-semibold">대화 프로필</h2>
+          <p id="profile-help" className="mt-2 text-sm text-[#aaa] leading-relaxed">
+            원하는 항목만 입력해주세요. 한 항목 이상이면 충분해요.
+          </p>
+          <p id="preserve-help" className="mt-2 mb-5 text-xs text-[#aaa] leading-relaxed">
+            ‘설정 유지’를 선택하면 의미와 수치를 보존하도록 요청하고, 표현만 다듬어요.
+            해제하면 삭제하지 않고 세계관에 맞게 조정할 수 있어요.
+          </p>
+          <div className="space-y-4">
+            {PROFILE_FIELDS.map(({ key, label, placeholder }) => (
+              <div key={key}>
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <label htmlFor={`profile-${key}`} className="text-sm font-medium">{label}</label>
+                  <label className="flex items-center gap-2 py-1 text-xs text-[#bbb] cursor-pointer">
+                    <input
+                      type="checkbox"
+                      aria-label={`${label} 설정 유지`}
+                      aria-describedby="preserve-help"
+                      checked={profile[key].preserve}
+                      disabled={loading}
+                      onChange={(e) => updateProfile(key, { preserve: e.target.checked })}
+                      className="h-4 w-4 accent-[#6728FF]"
+                    />
+                    설정 유지
+                  </label>
+                </div>
+                <Textarea
+                  id={`profile-${key}`}
+                  placeholder={placeholder}
+                  value={profile[key].text}
+                  disabled={loading}
+                  onChange={(e) => updateProfile(key, { text: e.target.value })}
+                  aria-describedby="profile-help profile-length"
+                  aria-invalid={profileLength > PROFILE_MAX_LENGTH}
+                  className="h-24 min-h-24"
+                />
+              </div>
+            ))}
+          </div>
+          <p id="profile-length" className={`mt-2 text-right text-xs ${profileLength > PROFILE_MAX_LENGTH ? "text-red-400" : "text-[#999]"}`}>
+            네 항목 합계 {profileLength.toLocaleString()} / {PROFILE_MAX_LENGTH.toLocaleString()}자
+          </p>
+          <label htmlFor="plot-content" className="block pt-6 mb-2 text-sm font-medium">플롯(캐릭터) 내용</label>
           <Textarea
-            placeholder="기본 프로필을 입력하세요.
-
-예)
-[나이: 25세]
-[성별: 남성, ♂️]
-[종족: 인간]
-
-#외형
-- 175cm, 65kg, 평범한 외형
-
-#특이 사항
-- 독서를 좋아함, 생각보단 다부진 몸
-"
-            value={baseProfile}
-            onChange={(e) => setBaseProfile(e.target.value)}
-          />
-          <h3 className="px-2 pt-6 mb-2">플롯(캐릭터)의 내용을 복붙해주세요</h3>
-          <Textarea
+            id="plot-content"
             placeholder="플롯 내용을 붙여넣으세요"
             value={plotContent}
+            disabled={loading}
+            aria-describedby="plot-length"
+            aria-invalid={plotLength > PLOT_MAX_LENGTH}
             onChange={(e) => setPlotContent(e.target.value)}
           />
-          {error && <p className="text-red-400 text-sm mt-2 px-2">{error}</p>}
+          <p id="plot-length" className={`mt-2 text-right text-xs ${plotLength > PLOT_MAX_LENGTH ? "text-red-400" : "text-[#999]"}`}>
+            {plotLength.toLocaleString()} / {PLOT_MAX_LENGTH.toLocaleString()}자
+          </p>
+          {error && <p role="alert" className="text-red-400 text-sm mt-2">{error}</p>}
           <Button
             onClick={handleGenerate}
             label="프로필 생성하기"

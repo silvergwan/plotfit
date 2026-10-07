@@ -1,0 +1,191 @@
+{
+  "timestamp": "2026-09-29T08:10:19.561Z",
+  "model": "gpt-4o-mini",
+  "temperature": 0.7,
+  "promptHash": "6857a94c060f491aa4efe5b19e534b642f76f1414d8a95995b3d9dc0d84bb13a",
+  "cases": [
+    {
+      "name": "preserve-all",
+      "profile": {
+        "appearance": {
+          "text": "185cm, 78kg. 짧은 검은 머리와 갈색 눈, 건장한 체격.",
+          "preserve": true
+        },
+        "personality": {
+          "text": "마음이 여리고 배려심이 많으며 아기자기한 물건을 좋아함.",
+          "preserve": true
+        },
+        "background": {
+          "text": "어린 시절 부모를 여의고 혼자 살아왔다. 현재 편의점에서 일하며 경찰 시험을 준비한다. 어려운 사람을 보호하는 경찰이 목표다.",
+          "preserve": true
+        },
+        "other": {
+          "text": "작은 동물 모양 장식품을 모으고 높은 곳을 무서워한다.",
+          "preserve": true
+        }
+      }
+    },
+    {
+      "name": "adapt-background-1",
+      "profile": {
+        "appearance": {
+          "text": "185cm, 78kg. 짧은 검은 머리와 갈색 눈, 건장한 체격.",
+          "preserve": true
+        },
+        "personality": {
+          "text": "마음이 여리고 배려심이 많으며 아기자기한 물건을 좋아함.",
+          "preserve": true
+        },
+        "background": {
+          "text": "어린 시절 부모를 여의고 혼자 살아왔다. 현재 편의점에서 일하며 경찰 시험을 준비한다. 어려운 사람을 보호하는 경찰이 목표다.",
+          "preserve": false
+        },
+        "other": {
+          "text": "작은 동물 모양 장식품을 모으고 높은 곳을 무서워한다.",
+          "preserve": true
+        }
+      }
+    },
+    {
+      "name": "adapt-background-2",
+      "profile": {
+        "appearance": {
+          "text": "185cm, 78kg. 짧은 검은 머리와 갈색 눈, 건장한 체격.",
+          "preserve": true
+        },
+        "personality": {
+          "text": "마음이 여리고 배려심이 많으며 아기자기한 물건을 좋아함.",
+          "preserve": true
+        },
+        "background": {
+          "text": "어린 시절 부모를 여의고 혼자 살아왔다. 현재 편의점에서 일하며 경찰 시험을 준비한다. 어려운 사람을 보호하는 경찰이 목표다.",
+          "preserve": false
+        },
+        "other": {
+          "text": "작은 동물 모양 장식품을 모으고 높은 곳을 무서워한다.",
+          "preserve": true
+        }
+      }
+    },
+    {
+      "name": "adapt-background-3",
+      "profile": {
+        "appearance": {
+          "text": "185cm, 78kg. 짧은 검은 머리와 갈색 눈, 건장한 체격.",
+          "preserve": true
+        },
+        "personality": {
+          "text": "마음이 여리고 배려심이 많으며 아기자기한 물건을 좋아함.",
+          "preserve": true
+        },
+        "background": {
+          "text": "어린 시절 부모를 여의고 혼자 살아왔다. 현재 편의점에서 일하며 경찰 시험을 준비한다. 어려운 사람을 보호하는 경찰이 목표다.",
+          "preserve": false
+        },
+        "other": {
+          "text": "작은 동물 모양 장식품을 모으고 높은 곳을 무서워한다.",
+          "preserve": true
+        }
+      }
+    },
+    {
+      "name": "appearance-only",
+      "profile": {
+        "appearance": {
+          "text": "185cm, 78kg. 짧은 검은 머리와 갈색 눈, 건장한 체격.",
+          "preserve": true
+        },
+        "personality": {
+          "text": "",
+          "preserve": true
+        },
+        "background": {
+          "text": "",
+          "preserve": true
+        },
+        "other": {
+          "text": "",
+          "preserve": true
+        }
+      }
+    }
+  ],
+  "plotContent": "마법과 검술이 공존하는 아르덴 왕국의 수도 루메인. 성문 경비대는 시민을 보호한다. 현대 편의점과 경찰 제도, 경찰 시험은 없다. 경비대 선발에는 체력 검사와 법률 구술시험이 있다. 사용자는 모집일에 접수소 앞에 도착한다. 사용자의 개인 배경은 미정이다.",
+  "results": [
+    {
+      "name": "preserve-all",
+      "checks": {
+        "appearancePreserved": true,
+        "originalWorkPreserved": false,
+        "originalGoalPreserved": false
+      },
+      "passed": false,
+      "output": {
+        "appearance": "185cm, 78kg. 짧은 검은 머리와 갈색 눈, 건장한 체격.",
+        "traits": "마음이 여리고 배려심이 많으며 아기자기한 물건을 좋아함. 어린 시절 부모를 여의고 혼자 살아왔다. 작은 동물 모양 장식품을 모으고 높은 곳을 무서워한다.",
+        "plot_position": "현재 성문 경비대 선발을 준비하고 있으며 시민을 보호하는 경비대원이 목표다."
+      }
+    },
+    {
+      "name": "adapt-background-1",
+      "checks": {
+        "appearancePreserved": true,
+        "noModernRemainders": true,
+        "livelihoodAdapted": false,
+        "goalAdapted": true,
+        "pastPreserved": true
+      },
+      "passed": false,
+      "output": {
+        "appearance": "185cm, 78kg. 짧은 검은 머리와 갈색 눈, 건장한 체격.",
+        "traits": "마음이 여리고 배려심이 많으며 아기자기한 물건을 좋아함. 어린 시절 부모를 여의고 혼자 살아왔다. 작은 동물 모양 장식품을 모으고 높은 곳을 무서워한다.",
+        "plot_position": "아르덴 왕국의 수도 루메인에서 경비대 선발을 준비하는 시민이며, 체력 검사와 법률 구술시험을 통해 시민을 보호하는 경비대원이 되는 것을 목표로 하고 있다."
+      }
+    },
+    {
+      "name": "adapt-background-2",
+      "checks": {
+        "appearancePreserved": true,
+        "noModernRemainders": true,
+        "livelihoodAdapted": false,
+        "goalAdapted": true,
+        "pastPreserved": true
+      },
+      "passed": false,
+      "output": {
+        "appearance": "185cm, 78kg. 짧은 검은 머리와 갈색 눈, 건장한 체격.",
+        "traits": "마음이 여리고 배려심이 많으며 아기자기한 물건을 좋아함. 어린 시절 부모를 여의고 혼자 살아왔다. 어려운 사람을 보호하는 경비대원이 목표다. 작은 동물 모양 장식품을 모으고 높은 곳을 무서워한다.",
+        "plot_position": "현재 성문 경비대 선발을 준비 중이며, 시민을 보호하는 역할을 목표로 하고 있다."
+      }
+    },
+    {
+      "name": "adapt-background-3",
+      "checks": {
+        "appearancePreserved": true,
+        "noModernRemainders": true,
+        "livelihoodAdapted": false,
+        "goalAdapted": true,
+        "pastPreserved": true
+      },
+      "passed": false,
+      "output": {
+        "appearance": "185cm, 78kg. 짧은 검은 머리와 갈색 눈, 건장한 체격.",
+        "traits": "마음이 여리고 배려심이 많으며 아기자기한 물건을 좋아함. 어린 시절 부모를 여의고 혼자 살아왔다. 어려운 사람을 보호하는 경비대원이 목표다. 작은 동물 모양 장식품을 모으고 높은 곳을 무서워한다.",
+        "plot_position": "현재 성문 경비대 선발을 준비하며 시민을 보호하는 역할을 꿈꾸고 있다."
+      }
+    },
+    {
+      "name": "appearance-only",
+      "checks": {
+        "appearancePreserved": true,
+        "noInventedPersonalDetails": true
+      },
+      "passed": true,
+      "output": {
+        "appearance": "185cm, 78kg. 짧은 검은 머리와 갈색 눈, 건장한 체격.",
+        "traits": "입력된 추가 설정 없음",
+        "plot_position": "루메인 성문 경비대 지원자로, 시민을 보호하는 역할을 목표로 하고 있다."
+      }
+    }
+  ]
+}
