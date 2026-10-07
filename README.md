@@ -27,7 +27,7 @@ Zeta는 앱 사용률이 압도적으로 높다는 걸 뒤늦게 깨달았습니
 
 | 영역     | 기술                                |
 | -------- | ----------------------------------- |
-| Frontend | Next.js 14 (App Router), TypeScript, Zod |
+| Frontend | Next.js 16 (App Router), TypeScript, Zod |
 | Styling  | Tailwind CSS                        |
 | AI       | GPT API (OpenAI gpt-4o-mini)        |
 | 배포     | Vercel                              |
