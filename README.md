@@ -2,7 +2,7 @@
 
 > Zeta 유저를 위한 플롯 맞춤형 대화 프로필 생성 서비스
 
-<img width="1470" height="836" alt="Image" src="https://github.com/user-attachments/assets/771987a3-2e4b-4106-bb18-2e74655406e5" />
+<img width="1903" height="919" alt="Image" src="https://github.com/user-attachments/assets/1c8ed7e8-724b-4183-aa81-df665301e023" />
 
 ## 만든 이유
 
