@@ -24,7 +24,7 @@ import {
   ProfileOutputSchema,
   type ProfileOutput,
 } from "@/lib/schema/profile-schema";
-import { checkRateLimit } from "@/lib/rateLimit";
+import { checkRateLimit, MAX_REQUESTS } from "@/lib/rateLimit";
 import { GenerateInputSchema } from "@/lib/schema/generate-input-schema";
 
 // ── 재시도 포함 생성 함수 ────────────────────────────────────────────────────
@@ -156,7 +156,7 @@ export async function POST(req: NextRequest) {
       {
         status: 429,
         headers: {
-          "X-RateLimit-Limit": "5",
+          "X-RateLimit-Limit": String(MAX_REQUESTS),
           "X-RateLimit-Remaining": "0",
           "Retry-After": String(resetInSeconds),
         },

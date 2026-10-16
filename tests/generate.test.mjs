@@ -18,20 +18,29 @@ const validInput = {
 const output = { appearance: null, traits: "성실함", plot_position: "동료" };
 
 // 기존 TypeScript로 실제 서버 모듈을 메모리에서 변환한다.
-// 외부 SDK는 모킹하고, NextResponse/Zod 및 요청 제한 구현은 그대로 실행한다.
+// 외부 SDK는 모킹하고, NextResponse/Zod 및 요청 제한 어댑터는 그대로 실행한다.
 // 허용하지 않은 import는 실패시켜 실수로 실제 외부 SDK를 로드하지 않는다.
-function setup({ count = 1, failRedis, failOpenAI = false, apiKey = "mock-only" } = {}) {
+function setup({ count = 1, failRedis = false, timeout = false, resetAfterMs = 42_000, failOpenAI = false, apiKey = "mock-only" } = {}) {
   const calls = { redis: [], openai: [] };
-  const redis = Object.fromEntries(
-    ["incr", "expire", "ttl"].map((method) => [
-      method,
-      async (...args) => {
-        calls.redis.push([method, ...args]);
-        if (failRedis === method) throw new Error("secret Redis URL/token");
-        return method === "incr" ? count : method === "ttl" ? 42 : 1;
-      },
-    ]),
-  );
+  const redis = {};
+  const now = 1_800_000_000_000;
+  let rateLimitOptions;
+  class Ratelimit {
+    static fixedWindow(limit, window) { return { limit, window }; }
+    constructor(options) { rateLimitOptions = options; }
+    async limit(identifier) {
+      calls.redis.push(["limit", identifier]);
+      if (failRedis) throw new Error("secret Redis URL/token");
+      return {
+        success: timeout || count <= 5,
+        remaining: Math.max(0, 5 - count),
+        limit: 5,
+        reset: now + resetAfterMs,
+        reason: timeout ? "timeout" : undefined,
+        pending: Promise.resolve(),
+      };
+    }
+  }
   class OpenAI {
     constructor({ apiKey }) {
       if (!apiKey) throw new Error("Missing credentials");
@@ -65,6 +74,7 @@ function setup({ count = 1, failRedis, failOpenAI = false, apiKey = "mock-only" 
     const sandboxRequire = (id) => {
       if (id === "openai") return OpenAI;
       if (id === "@upstash/redis") return { Redis: { fromEnv: () => redis } };
+      if (id === "@upstash/ratelimit") return { Ratelimit };
       if (id === "zod" || id === "next/server") return require(id);
       if (id.startsWith("@/")) return load(`${id.slice(2)}.ts`);
       throw new Error(`Unmocked import: ${id}`);
@@ -78,6 +88,7 @@ function setup({ count = 1, failRedis, failOpenAI = false, apiKey = "mock-only" 
         process: { env: { OPENAI_API_KEY: apiKey } },
         console: { error() {} },
         setTimeout,
+        Date: class extends Date { static now() { return now; } },
       },
       { filename },
     );
@@ -96,7 +107,7 @@ function setup({ count = 1, failRedis, failOpenAI = false, apiKey = "mock-only" 
         body,
       }),
     );
-  return { calls, send };
+  return { calls, send, rateLimitOptions, checkRateLimit: load("lib/rateLimit.ts").checkRateLimit };
 }
 
 for (const apiKey of [null, "", "   "]) {
@@ -111,8 +122,8 @@ for (const apiKey of [null, "", "   "]) {
   });
 }
 
-test("정상 입력: trim, 응답 계약, 실제 요청 제한과 생성 설정 유지", async () => {
-  const { calls, send } = setup();
+test("정상 입력: trim, 응답 계약, SDK 요청 제한과 생성 설정 유지", async () => {
+  const { calls, send, rateLimitOptions } = setup();
   const response = await send(
     JSON.stringify({
       profile: {
@@ -137,11 +148,10 @@ test("정상 입력: trim, 응답 계약, 실제 요청 제한과 생성 설정 
   assert.equal(body._meta.hadRetries, false);
   assert.equal(body._meta.validationErrorCount, 0);
   assert.ok(body._meta.durationMs >= 0);
-  assert.deepEqual(calls.redis, [
-    ["incr", "rate_limit:192.0.2.1"],
-    ["expire", "rate_limit:192.0.2.1", 60],
-    ["ttl", "rate_limit:192.0.2.1"],
-  ]);
+  assert.deepEqual(calls.redis, [["limit", "192.0.2.1"]]);
+  assert.deepEqual(rateLimitOptions.limiter, { limit: 5, window: "60 s" });
+  assert.equal(rateLimitOptions.timeout, 5_000);
+  assert.equal(rateLimitOptions.analytics, false);
   assert.equal(calls.openai.length, 1);
   assert.equal(calls.openai[0].model, "gpt-4o-mini");
   assert.equal(calls.openai[0].temperature, 0.7);
@@ -248,18 +258,36 @@ test("여섯 번째 요청은 429, 기존 헤더 유지, OpenAI 호출 없음", 
   assert.equal(calls.openai.length, 0);
 });
 
-for (const failRedis of ["incr", "expire", "ttl"]) {
-  test(`Redis ${failRedis} 장애: 503, 내부 정보 비노출, OpenAI 호출 없음`, async () => {
-    const { calls, send } = setup({ failRedis });
+for (const failure of [{ failRedis: true }, { timeout: true }]) {
+  test(`제한 확인 실패 ${JSON.stringify(failure)}: 503, 내부 정보 비노출, OpenAI 호출 없음`, async () => {
+    const { calls, send } = setup(failure);
     const response = await send();
     assert.equal(response.status, 503);
     assert.deepEqual(await response.json(), {
       error: "일시적인 서비스 장애입니다. 잠시 후 다시 시도해주세요.",
     });
     assert.equal(calls.openai.length, 0);
-    assert.equal(calls.redis.at(-1)[0], failRedis);
+    assert.deepEqual(calls.redis, [["limit", "192.0.2.1"]]);
   });
 }
+
+for (const [resetAfterMs, seconds] of [[1_001, 2], [0, 1], [-1_000, 1]]) {
+  test(`재시도 시간 ${resetAfterMs}ms는 ${seconds}초로 안내`, async () => {
+    const { calls, send } = setup({ count: 6, resetAfterMs });
+    const response = await send();
+    assert.equal(response.status, 429);
+    assert.equal(response.headers.get("Retry-After"), String(seconds));
+    assert.equal(calls.openai.length, 0);
+  });
+}
+
+test("SDK의 남은 횟수와 reset 시각을 기존 반환 형식으로 변환", async () => {
+  const { checkRateLimit } = setup({ count: 2 });
+  const result = await checkRateLimit("192.0.2.1");
+  assert.equal(result.allowed, true);
+  assert.equal(result.remaining, 3);
+  assert.equal(result.resetInSeconds, 42);
+});
 
 test("생성 예외도 내부 정보 없이 기존 500 JSON 반환", async () => {
   const { send } = setup({ failOpenAI: true });
