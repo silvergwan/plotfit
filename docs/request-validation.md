@@ -1,5 +1,9 @@
 # 생성 요청 검증과 장애 처리
 
+> 아래 내용은 입력 검증 도입 당시의 기록이다. 현재 요청 제한은
+> `@upstash/ratelimit`으로 전환했으며, timeout 차단과 검증 범위는
+> [생성 API 요청 제한](rate-limiting.md)을 참고한다.
+
 ## 요청 흐름과 이번 변경
 
 `app/page.tsx` → `/api/generate` → JSON 파싱 → Zod 입력 검증 →
@@ -57,8 +61,8 @@ result-*.json, scripts/의 기존 평가 코드, lib/prompts.ts는 수정하지 
 
 후속 검토 항목:
 
-- Redis INCR/EXPIRE가 분리되어 있어 EXPIRE 실패 시 TTL 없는 키가 남을 수
-  있다. 이번에는 장애 요청을 차단했고, 원자적 카운터/만료 처리는 후속 과제다.
+- Redis INCR/EXPIRE 분리 문제는 이후 SDK 전환으로 처리했다.
+  변경 전 실패 경로와 현재 정책은 [생성 API 요청 제한](rate-limiting.md)에 기록했다.
 - 본문 바이트 제한과 프록시의 신뢰할 수 있는 IP 헤더/트래픽 제한을 확인한다.
 - SDK 초기화 시 환경 설정 오류, 네트워크 타임아웃과 SDK 자체 재시도 정책은
   별도 운영 설정 점검이 필요하다. 이번 테스트는 Redis 명령 실행 장애 대상이다.

@@ -31,6 +31,10 @@ Zeta는 앱 사용률이 압도적으로 높다는 걸 뒤늦게 깨달았습니
 입력 JSON과 검증·호환성은 [항목별 프로필 입력](docs/structured-profile.md)을 참고하세요.
 출력 Zod 검증은 데이터 구조를 확인하며, AI의 의미 보존을 보장하지는 않습니다.
 
+생성 API는 Upstash Redis와 `@upstash/ratelimit`으로 IP당 각 1분 구간에
+5회까지 허용합니다. 제한 확인 중 오류나 timeout이 발생하면 생성을 차단합니다.
+시간 기준과 검증 범위는 [생성 API 요청 제한](docs/rate-limiting.md)을 참고하세요.
+
 ## 기술 스택
 
 | 영역     | 기술                                |
